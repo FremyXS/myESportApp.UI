@@ -1,6 +1,6 @@
 import { Icon28UsersOutline } from "@vkontakte/icons";
 import { Button, Card, Group, Headline, Title, Cell, Counter, Div } from "@vkontakte/vkui";
-import React from "react";
+import * as React from "react";
 import { games } from "../../data";
 import { Apply} from "../../types";
 

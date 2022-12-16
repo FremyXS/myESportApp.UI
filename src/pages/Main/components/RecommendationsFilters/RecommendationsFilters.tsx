@@ -1,6 +1,6 @@
 import { Icon24Filter } from "@vkontakte/icons";
 import { Counter, SubnavigationBar, SubnavigationButton } from "@vkontakte/vkui";
-import React from "react";
+import * as React from "react";
 
 interface RecommendationsFiltersProps{
     filtersCount: number,

@@ -52,4 +52,11 @@ export const applyes: Apply[] =[
         countOccupiedSeats: 2,
         game: 2,
     },
+    {
+        id: 5,
+        header: 'Набор в комманду',
+        countSeats: 6,
+        countOccupiedSeats: 2,
+        game: 4,
+    },
 ]
