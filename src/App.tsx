@@ -1,14 +1,14 @@
 import React from 'react';
-import { BrowserRouter, Routes } from 'react-router-dom';
-import { Route } from 'use-react-router-breadcrumbs';
-import { recommendationsRoutes } from "./features/recommendations/routes";
+import { AppRoot, Panel, PanelHeader, Root, View } from '@vkontakte/vkui';
+import RecommendationsPage from './features/recommendations/RecommendationsPage';
 
 function App() {
   return (
-    <Routes>
-        <Route path={recommendationsRoutes.path}
-        element={<recommendationsRoutes.Component/>}/>
-    </Routes>
+    <AppRoot>
+      <Root activeView='view1'>
+        <RecommendationsPage id='view1'/>
+      </Root>
+    </AppRoot>
   );
 }
 
