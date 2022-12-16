@@ -1,5 +1,5 @@
 import * as React from 'react'
-import CustomTabbar from '../../components/custom tabbar/CustomTabbar';
+import CustomTabbar from '@Components/custom tabbar/CustomTabbar';
 import {Panel,PanelHeader,View,PanelHeaderButton} from '@vkontakte/vkui';
 import { Icon28Notifications } from '@vkontakte/icons';
 import DataManager from "@Helpers/DataManager";
