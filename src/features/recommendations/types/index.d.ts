@@ -2,7 +2,7 @@ export type Apply = {
     id: number,
     countSeats: number,
     countOccupiedSeats: number,
-    game: string,
+    game: number,
     header: string,
 }
 
