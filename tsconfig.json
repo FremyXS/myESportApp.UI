@@ -3,7 +3,6 @@
     "jsx": "react",
     "baseUrl": "./src",
     "paths": {
-      "@Layouts/*": ["./layouts/*"],
       "@Pages/*": ["./pages/*"],
       "@Components/*": ["./components/*"],
       "@Constants/*": ["./constants/*"],
@@ -11,6 +10,5 @@
       "@Assets/*": ["./assets/*"],
       "@Styles/*": ["./styles/*"]
     }
-  },
-  "exclude": ["build", "node_modules"]
+  }
 }

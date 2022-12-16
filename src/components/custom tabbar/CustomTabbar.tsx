@@ -4,7 +4,7 @@ import { Icon56AddCircleOutline } from '@vkontakte/icons';
 import "./CustomTabbar.css";
 
 const CustomTabbar = ({addTask}) => {
-    const tabbarStyle = {
+    const tabbarStyle: React.CSSProperties = {
         position: "absolute",
         bottom: "0",
         marginBottom: "22px",
@@ -16,7 +16,7 @@ const CustomTabbar = ({addTask}) => {
     }
     return(
         <Tabbar>
-            <TabbarItem style = {tabbarStyle}>
+            <TabbarItem style={tabbarStyle} onClick={addTask}>
                 <Icon56AddCircleOutline color="#0000CD"/>
             </TabbarItem>
         </Tabbar>

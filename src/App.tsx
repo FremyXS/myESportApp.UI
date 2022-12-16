@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { AppRoot, Panel, PanelHeader, Root, View } from '@vkontakte/vkui';
-import RecommendationsPage from './features/recommendations/RecommendationsPage';
+import { AppRoot, Root } from '@vkontakte/vkui';
 import Main from "@Pages/Main/main";
 
 function App() {
