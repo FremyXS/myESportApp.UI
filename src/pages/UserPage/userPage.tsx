@@ -12,7 +12,7 @@ import {
     Spinner,
     SplitLayout,
     SplitCol,
-    CellButton, Group
+    CellButton, Group, Caption
 } from '@vkontakte/vkui';
 import {
     Icon28Notifications,
@@ -22,31 +22,45 @@ import {
     Icon28AddOutline
 } from "@vkontakte/icons";
 import bridge from "@vkontakte/vk-bridge";
-import { User, Pet } from "../../types/index.d.ts";
+import { User, Pet } from "../../types";
 import DataManager from "@Helpers/DataManager";
 import MockManager from "@Helpers/MockManager";
 import Loader from "@Components/Loader/laoder";
 import PetCard from "@Components/PetCard/petCard";
 import PetModal from "@Components/PetModal/PetModal";
+import InterestCard from "@Components/interestCard/interestCard";
+import InterestModal from "@Components/InterestModal/InterestModal";
 
 const UserPage = () => {
     const manager:DataManager = new MockManager();
-    const [isOpen,setIsOpen] = React.useState(false)
+    const [modal,setModal] = React.useState(null)
     const [user,setUser] = React.useState(undefined)
     const [pet,setPet] = React.useState(undefined)
+    const [interests,setInterests] = React.useState(undefined)
     React.useEffect(()=>{
         getUser()
     },[])
     React.useEffect(() => {
-        //getPets()
-    })
-    const getPets = () => {
+        getPet()
+    }, [user])
+    React.useEffect(() => {
+        getInterest()
+    }, [user])
+    const getPet = () => {
         if(user){
             manager.getPetOfUser(user.id)
                 .then(value=>{
                     setPet(value)
                 })
         }
+    }
+    const getInterest = () => {
+        if(user){
+            manager.getInterestOfUser().then(value=>{
+                setInterests(value)
+            })
+        }
+
     }
     const getUser = () =>{
         const url = new URL(window.location.href);
@@ -70,14 +84,14 @@ const UserPage = () => {
     const addPet = (pet: Pet) => {
         setPet(pet)
     }
-    const getModal = () => {
-        return(<PetModal isOpen={isOpen} setIsOpen={setIsOpen} addPet={addPet}/>)
+    const openPetModal = () => {
+        setModal((<PetModal close={()=>{setModal(null)}} addPet={addPet}/>))
     }
-    const openModal = () => {
-        setIsOpen(true)
+    const openInterestModal = () => {
+        setModal((<InterestModal close ={()=>{setModal(null)}}addInterest={()=>{}}/>))
     }
     return (
-        <SplitLayout modal={getModal()}>
+        <SplitLayout modal={modal??''}>
             <SplitCol>
                 <View activePanel="userPanel" id ="user">
                     <Panel id="userPanel">
@@ -102,12 +116,29 @@ const UserPage = () => {
                                             <Title style={{textAlign: "center"}}>
                                                 {user?getName():'username'}
                                             </Title>
+                                            <Caption level="1" style={{ marginTop: 16, textAlign: "center" }}>
+                                                {user.description}
+                                            </Caption>
                                         </Div>
                                     </Card>
+                                    <Card mode="shadow" style={{marginTop:"40px", padding: "8px"}}>
+                                        {
+                                            interests?(<InterestCard interestings={interests}/>):""
+                                        }
+                                        {
+                                            interests&&interests.length<6?(
+                                                <CellButton before={<Icon28AddOutline />} style={{marginTop:"16px"}}
+                                                            onClick={openInterestModal}>
+                                                    Добавить Интересы
+                                                </CellButton>
+                                            ):""
+                                        }
+                                    </Card>
+
                                     {
                                         pet?(<PetCard pet={pet}/>):(
                                             <CellButton before={<Icon28AddOutline />} style={{marginTop:"16px"}}
-                                                        onClick={openModal}>
+                                                        onClick={openPetModal}>
                                                 Добавить питомца
                                             </CellButton>
                                         )

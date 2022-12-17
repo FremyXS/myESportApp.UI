@@ -1,11 +1,11 @@
 import DataManager from "@Helpers/DataManager";
-import {Pet, User} from "../types/index.d.ts";
+import {Genre, Pet, User, Sex, Interest} from "../types";
 
 export default class ApiManager implements DataManager{
     _url:string = "https://backend.dlsky.site/"
 
     getPetOfUser(userId): Promise<Pet> {
-        return Promise.resolve([]);
+        return Promise.resolve(new Pet(1,"slava",2,Sex.male,new Genre(1,"s","s")));
     }
 
     async registerUser(user: User): Promise<boolean> {
@@ -26,5 +26,13 @@ export default class ApiManager implements DataManager{
             body:JSON.stringify(jsonUser)
         })
         return Promise.resolve(response.ok)
+    }
+
+    getAllGenre(): Promise<Genre[]> {
+        return Promise.resolve([]);
+    }
+
+    getInterestOfUser(): Promise<Interest[]> {
+        return Promise.resolve([]);
     }
 }

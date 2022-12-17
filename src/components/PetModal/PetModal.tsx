@@ -13,10 +13,11 @@ import { ModalRoot } from "@vkontakte/vkui/dist/components/ModalRoot/ModalRootAd
 import * as React from "react";
 import {Icon16Clear, Icon28Done} from "@vkontakte/icons";
 import {useState} from "react";
-import {Sex , Pet} from "../../types/index.d.ts"
+import {Sex , Pet} from "../../types"
 import MockManager from "../../helpers/MockManager";
 
-const PetModal = ({isOpen, setIsOpen, addPet}) => {
+const PetModal = ({close, addPet}) => {
+    const [isOpen, setIsOpen] = useState(true)
     const [age,setAge] = useState(10)
     const [sex,setSex] = useState(0)
     const [genre,setGenre] = useState(undefined)
@@ -30,6 +31,9 @@ const PetModal = ({isOpen, setIsOpen, addPet}) => {
         })
     }
     const closeModal = () => {
+        if(close){
+            close()
+        }
         setIsOpen(false)
     }
     React.useEffect(()=>{
@@ -48,6 +52,9 @@ const PetModal = ({isOpen, setIsOpen, addPet}) => {
                     petSex = Sex.female;break;
             }
             addPet(new Pet(0,name,age,Sex.male,genre))
+        }
+        if(close){
+            close()
         }
         setIsOpen(false)
     }
@@ -119,7 +126,6 @@ const PetModal = ({isOpen, setIsOpen, addPet}) => {
                     </FormItem>
                     <FormItem top="Порода">
                         <Select onChange={(e) =>{
-                            console.log(e.target.value)
                             setGenre(genres.filter(x=>x.id === e.target.value)[0])
                         }}
                                 value={genre?genre.id:0}
