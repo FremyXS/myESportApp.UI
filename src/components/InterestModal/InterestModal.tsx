@@ -19,7 +19,9 @@ const InterestModal = ({close, addInterest}) => {
     const [isOpen,setIsOpen] = React.useState(true)
     const manager: DataManager = new MockManager();
     const [interests, setInterest] = useState([]);
-    const closeModal = () => {
+    const closeModal = async () => {
+        const a = new ApiManager()
+        await a.getInterestOfUser().then(r => console.log(r)).catch(e => console.log(e))
         if(close){
             close()
         }
