@@ -7,8 +7,8 @@ import MockManager from "@Helpers/MockManager";
 import { Apply } from './types';
 import { useEffect, useState } from 'react';
 import { applyes } from './data';
-import RecommendationsFilters from './components/RecommendationsFilters/RecommendationsFilters';
-import RecommendationsTicket from './components/RecommendationsTicket/RecommendationsTicket';
+import RecommendationsFilters from '../../components/RecommendationsFilters/RecommendationsFilters';
+import RecommendationsTicket from '../../components/RecommendationsTicket/RecommendationsTicket';
 
 
 const FILTERS_SIZE = [
@@ -137,8 +137,7 @@ const Main = () => {
                                 <PanelHeaderButton onClick={addNotify}>
                                     <Icon28Notifications />
                                 </PanelHeaderButton>
-                                }
-                                >
+                                }>
                                 Заявки
                         </PanelHeader>
                         <Group>
@@ -147,7 +146,7 @@ const Main = () => {
                             openModal={openModal}
                             />
                         </Group>
-                        <Group >
+                        <Group style={{paddingBottom:'80px'}}>
                             <CardGrid size="l">
                                 {tickets.map((el)=>
                                 (filterGames.includes(el.game) || filterGames.includes(0))  &&                                    

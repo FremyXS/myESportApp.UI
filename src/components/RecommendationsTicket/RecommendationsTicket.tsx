@@ -1,8 +1,8 @@
 import { Icon28UsersOutline } from "@vkontakte/icons";
 import { Button, Card, Group, Headline, Title, Cell, Counter, Div } from "@vkontakte/vkui";
 import * as React from "react";
-import { games } from "../../data";
-import { Apply} from "../../types";
+import { games } from "@Pages/Main/data";
+import { Apply} from "@Pages/Main/types";
 
 function RecommendationsTicket({apply}: {apply: Apply}){
 
