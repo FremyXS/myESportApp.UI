@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, ButtonGroup, Checkbox, FormItem, FormLayout, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, SubnavigationButton } from '@vkontakte/vkui';
+import { Button, ButtonGroup, Checkbox, FormItem, FormLayout, HorizontalCell, HorizontalScroll, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
 import { Avatar, Card, CardGrid, Div, Header, InfoRow, Panel, SimpleCell, SplitCol, SplitLayout, Title, View } from '@vkontakte/vkui';
 import { UserType,  UserInfo} from '@Pages/Main/types';
 import bridge from '@vkontakte/vk-bridge';
@@ -14,14 +14,14 @@ enum SexSwitch {
 
 const FILTERS_USER_SEX = [
   { value: 0, label: 'Не указан' },
-  { value: 1, label: 'Женский' },
-  { value: 2, label: 'Мужской' },
+  { value: 1, label: 'Хозяйка' },
+  { value: 2, label: 'Хозяин' },
 ]
 
 const FILTERS_DOG_SEX = [
     { value: 0, label: 'Не указан' },
-    { value: 1, label: 'СУКА' },
-    { value: 2, label: 'КАБЕЛЬ' },
+    { value: 1, label: 'Самка' },
+    { value: 2, label: 'Самец' },
 ]
 
 const Main = () => {
@@ -60,8 +60,11 @@ const Main = () => {
     }, [])
 
     const [filtersModalOpened, setFiltersModalOpened] = React.useState(false);
-    const[filtersUserSex, setFiltersUserSex] = React.useState([0]);
-    const[filtersDogSex, setFiltersDogSex] = React.useState([0]);
+    const [filtersUserSex, setFiltersUserSex] = React.useState([0]);
+    const [userAge, setUserAge] = React.useState([18, 90]);
+    const [filtersDogSex, setFiltersDogSex] = React.useState([0]);
+    const [dogAge, setDogAge] = React.useState([2, 10]);
+    
 
     function onAppenedClick(){
 
@@ -140,6 +143,9 @@ const Main = () => {
                   );
                 })}
               </FormItem>
+              <FormItem top={`Возрост: от ${userAge[0]} до ${userAge[1]}`}>
+                <RangeSlider min={0} max={100} step={1} defaultValue={userAge}  onChange={setUserAge}/>
+              </FormItem>
               <Header>Собака</Header>
               <FormItem top="Пол">
                 {FILTERS_DOG_SEX.map(({ value, label }) => {
@@ -153,6 +159,9 @@ const Main = () => {
                     </Checkbox>
                   );
                 })}
+              </FormItem>
+              <FormItem top={`Возрост: от ${dogAge[0]} до ${dogAge[1]}`}>
+                <RangeSlider min={0} max={50} step={1} defaultValue={dogAge}  onChange={setDogAge}/>
               </FormItem>
               <FormItem>
                 <Button size="l" stretched onClick={applyFilters}>
@@ -179,12 +188,10 @@ const Main = () => {
                     </Div>
                 </PanelHeader>
                 <CardGrid size={'l'}>
-                    <Card mode="shadow">
-                        <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center'}}>
+                        <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center', width: '100%'}}>
                             <Avatar size={225} src={userInfo.photo_max_orig}>                            
                             </Avatar>
                         </Div>
-                    </Card>
                     <Card mode="shadow">
                         <Div>
                             <Title>
@@ -209,22 +216,32 @@ const Main = () => {
                         </Div>
                     </Card>
                     <Card mode="shadow">
-                        <Div>
-                            <Header mode="secondary">Питомцы:</Header>
+                        <Header mode="secondary">Питомцы:</Header>
+                            <HorizontalScroll
+                            showArrows
+                            getScrollToLeft={(i) => i - 120}
+                            getScrollToRight={(i) => i + 120}>                            
+                            <div style={{display: 'flex'}}>
                             {searchUser.pets.map((el, index) =>
-                                <Div key={index}>
-                                    <SimpleCell multiline>
-                                        <InfoRow header="Имя">{el.name}</InfoRow>
-                                    </SimpleCell>
-                                    <SimpleCell multiline>
-                                        <InfoRow header="Парода">{el.gener}</InfoRow>
-                                    </SimpleCell>
-                                    <SimpleCell multiline>
-                                        <InfoRow header="Возраст">{el.age}</InfoRow>
-                                    </SimpleCell>
-                                </Div>
-                            )}                            
-                        </Div>
+                                <HorizontalCell key={index} size='l'>
+                                    <Div style={{display:'flex', width:'100%'}}>
+                                        <SimpleCell>
+                                            <Avatar size={40}></Avatar>
+                                        </SimpleCell>
+                                        <SimpleCell>
+                                            <InfoRow header="Имя">{el.name}</InfoRow>
+                                        </SimpleCell>   
+                                        <SimpleCell>
+                                            <InfoRow header="Парода">{el.gener}</InfoRow>
+                                        </SimpleCell>      
+                                        <SimpleCell>
+                                            <InfoRow header="Возраст">{el.age}</InfoRow> 
+                                        </SimpleCell>                                                                 
+                                    </Div>
+                                </HorizontalCell>  
+                            )}   
+                            </div>       
+                            </HorizontalScroll>
                     </Card>
                     <Div style={{width: '100%'}}>
                     <ButtonGroup mode="horizontal" gap="m" stretched>
