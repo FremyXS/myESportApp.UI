@@ -15,6 +15,8 @@ import {Icon16Clear, Icon28Done} from "@vkontakte/icons";
 import {useState} from "react";
 import {Sex , Pet} from "../../types"
 import MockManager from "../../helpers/MockManager";
+import ApiManager from "../../helpers/ApiManager"
+import {log} from "util";
 
 const PetModal = ({close, addPet}) => {
     const [isOpen, setIsOpen] = useState(true)
@@ -30,10 +32,11 @@ const PetModal = ({close, addPet}) => {
             }
         })
     }
-    const closeModal = () => {
+    const closeModal = async () => {
         if(close){
             close()
         }
+
         setIsOpen(false)
     }
     React.useEffect(()=>{
