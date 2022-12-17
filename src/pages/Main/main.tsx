@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, ButtonGroup, Checkbox, FormItem, FormLayout, HorizontalCell, HorizontalScroll, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
+import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, HorizontalCell, HorizontalScroll, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
 import { Avatar, Card, CardGrid, Div, Header, InfoRow, Panel, SimpleCell, SplitCol, SplitLayout, Title, View } from '@vkontakte/vkui';
 import { UserType,  UserInfo} from '@Pages/Main/types';
 import bridge from '@vkontakte/vk-bridge';
@@ -38,6 +38,20 @@ const Main = () => {
                 name: 'Котя',
                 age: 6,
                 gener: "Кот"
+            },
+        ],
+        interests:[
+            {
+                id: '1',
+                label: 'СЕКС'
+            },
+            {
+                id: '2',
+                label: 'АНАЛ'
+            },
+            {
+                id: '3',
+                label: 'ТРОЛЬ'
             },
         ]
     })
@@ -243,14 +257,29 @@ const Main = () => {
                             </div>       
                             </HorizontalScroll>
                     </Card>
+                    <FormItem top="Интересы" style={{width:'100%'}}>
+                        <ChipsInput
+                        readOnly
+                        value={searchUser.interests}
+                        renderChip={({ id, label, ...rest }) => (
+                            <Chip
+                              value={id}
+                              removable={false}
+                              {...rest}
+                            >
+                              {label}
+                            </Chip>
+                          )}
+                        />
+                    </FormItem>
                     <Div style={{width: '100%'}}>
                     <ButtonGroup mode="horizontal" gap="m" stretched>
-                            <Button size='l' appearance="positive" stretched onClick={() => onCancelClick()}>
-                                <Icon12Check></Icon12Check>
-                            </Button>
                             <Button size='l' appearance="negative" stretched onClick={() => onAppenedClick()}>
                                 <Icon12Cancel></Icon12Cancel>
-                            </Button>                            
+                            </Button>    
+                            <Button size='l' appearance="positive" stretched onClick={() => onCancelClick()}>
+                                <Icon12Check></Icon12Check>
+                            </Button>                        
                         </ButtonGroup>
                     </Div>
                 </CardGrid>

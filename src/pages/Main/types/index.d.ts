@@ -2,6 +2,10 @@ export type UserType = {
     vkId: number,
     desk: string,
     pets: PetType[]
+    interests: {
+        id: string,
+        label: string,
+    }[],
 
 }
 
