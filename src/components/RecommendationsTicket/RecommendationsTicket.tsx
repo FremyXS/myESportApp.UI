@@ -1,10 +1,8 @@
 import { Icon12Cancel, Icon12Add  } from '@vkontakte/icons';
 import { Button, Card, Group, Headline, Title, Cell, Counter, Div, HorizontalScroll, HorizontalCell, Avatar, IconButton } from "@vkontakte/vkui";
-import * as React from "react";
-import { games } from "../../data";
-import { Apply} from "../../types";
-import PlayersRow from "../PlayersRow/PlayersRow";
-
+import * as React from "react";import { games } from "@Pages/Main/data";
+import PlayersRow from '@Pages/Main/components/PlayersRow/PlayersRow';
+import { Apply } from 'types';
 function RecommendationsTicket({apply}: {apply: Apply}){
 
     const ganeName = games.find((el) => el.id === apply.game)
