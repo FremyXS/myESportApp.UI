@@ -23,6 +23,7 @@ export default class MockManager implements DataManager {
     }
 
     getInterests(): Promise<Interest[]> {
-        return Promise.resolve([]);
+        return Promise.resolve([new Interest(0,"hello"),new Interest(1,"gay"),
+            new Interest(2,"work"), new Interest(3,"walk")]);
     }
 }

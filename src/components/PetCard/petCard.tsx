@@ -9,7 +9,6 @@ const PetCard = ({pet}) => {
         alignItems: "center",
         justifyContent: "start"
     }
-    console.log(pet)
     return(<Card mode="shadow" style={{marginTop:"40px", padding: "8px"}}>
         <Div style={divStyle}>
             <Icon28PawOutline color="#0000CD"/>

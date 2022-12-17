@@ -7,11 +7,13 @@ import {
     ModalPage,
     ModalPageHeader,
     PanelHeaderBack,
-    PanelHeaderButton, Select, Slider
+    PanelHeaderButton,
+    Text
 } from "@vkontakte/vkui";
 import {ModalRoot} from "@vkontakte/vkui/dist/components/ModalRoot/ModalRootAdaptive";
-import {Icon16Clear, Icon28Done} from "@vkontakte/icons";
+import {Icon28Done} from "@vkontakte/icons";
 import DataManager from "@Helpers/DataManager";
+import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
 
 const InterestModal = ({close, addInterest}) => {
     const [isOpen,setIsOpen] = React.useState(true)
@@ -27,14 +29,17 @@ const InterestModal = ({close, addInterest}) => {
         if (addInterest) {
 
         }
+        if(close){
+            close()
+        }
         setIsOpen(false)
     }
-    const interestOptions = (): CustomSelectOptionInterface[] => {
-        return interests.map(x => ({value: x.id, label: x.title}));
-    };
     React.useEffect(()=>{
-        manager.getInterests()
+        manager.getInterests().then(value=>{
+            setInterest(value)
+        })
     },[])
+    console.log(interests)
     return(
         <ModalRoot
             activeModal={isOpen ? "interest" : null}
@@ -49,7 +54,11 @@ const InterestModal = ({close, addInterest}) => {
                     Увлечение
                 </ModalPageHeader>}>
                 <FormLayout>
-
+                    <FormItem top="Выберите свои увлечения">
+                        <Checkbox defaultChecked>Я участвую в сборе</Checkbox>
+                        {interests?interests.map(value=> (<Checkbox key={value.id}>{value.title}</Checkbox>)
+                        ):''}
+                    </FormItem>
                 </FormLayout>
             </ModalPage>
         </ModalRoot>
