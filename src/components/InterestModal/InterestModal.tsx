@@ -20,8 +20,6 @@ const InterestModal = ({close, addInterest}) => {
     const manager: DataManager = new MockManager();
     const [interests, setInterest] = useState([]);
     const closeModal = async () => {
-        const a = new ApiManager()
-        await a.getInterestOfUser().then(r => console.log(r)).catch(e => console.log(e))
         if(close){
             close()
         }
