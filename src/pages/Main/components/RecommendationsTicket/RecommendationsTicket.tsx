@@ -1,8 +1,9 @@
-import { Icon28UsersOutline } from "@vkontakte/icons";
-import { Button, Card, Group, Headline, Title, Cell, Counter, Div } from "@vkontakte/vkui";
+import { Icon12Cancel, Icon12Add  } from '@vkontakte/icons';
+import { Button, Card, Group, Headline, Title, Cell, Counter, Div, HorizontalScroll, HorizontalCell, Avatar, IconButton } from "@vkontakte/vkui";
 import * as React from "react";
 import { games } from "../../data";
 import { Apply} from "../../types";
+import PlayersRow from "../PlayersRow/PlayersRow";
 
 function RecommendationsTicket({apply}: {apply: Apply}){
 
@@ -16,23 +17,20 @@ function RecommendationsTicket({apply}: {apply: Apply}){
                     <Title level="2">{apply.header}</Title>            
                 </Group>
                 <Group>
-                    <Cell
-                        before={<Icon28UsersOutline />}
-                        indicator={<Counter mode="primary">{apply.countSeats}</Counter>}
-                        >
-                        Количество мест
-                    </Cell>
-                    <Cell
-                        before={<Icon28UsersOutline />}
-                        indicator={<Counter mode="prominent">{apply.countOccupiedSeats}</Counter>}
-                        >
-                        Доступно мест
-                    </Cell>
-                </Group>
-                <Group>
-                    <Button size="l" appearance="accent" stretched>
-                        Принять
-                    </Button>
+                    <div style={{display: 'flex', justifyContent:'space-around'}}>  
+                                                        
+                        <PlayersRow players={apply.usersLeft}/>      
+                            <IconButton height={40} width={40} style={{backgroundColor: 'inherit'}}>
+                                <Icon12Add height={30} width={30} color='#c4c4c4'/>
+                            </IconButton>                            
+                        <Div>
+                            <Icon12Cancel height={30} width={30} color='#c4c4c4'/>
+                        </Div>
+                        <IconButton>
+                            <Icon12Add height={30} width={30} color='#c4c4c4'/>
+                        </IconButton>
+                        <PlayersRow players={apply.usersRight}/>
+                    </div>
                 </Group>
             </Div>
         </Card>

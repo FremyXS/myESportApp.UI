@@ -1,6 +1,6 @@
 import * as React from 'react'
 import CustomTabbar from '@Components/custom tabbar/CustomTabbar';
-import {Panel,PanelHeader,View,PanelHeaderButton, usePlatform, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderClose, Platform, FormLayout, FormItem, Checkbox, Button, Group, CardGrid, SplitLayout, SplitCol} from '@vkontakte/vkui';
+import {Panel,PanelHeader,View,PanelHeaderButton, usePlatform, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderClose, Platform, FormLayout, FormItem, Checkbox, Button, Group, CardGrid, SplitLayout, SplitCol, Div} from '@vkontakte/vkui';
 import { Icon24Dismiss, Icon28Notifications } from '@vkontakte/icons';
 import DataManager from "@Helpers/DataManager";
 import MockManager from "@Helpers/MockManager";
@@ -141,6 +141,7 @@ const Main = () => {
                                 >
                                 Заявки
                         </PanelHeader>
+                        <Div style={{paddingBottom: 80}}>
                         <Group>
                             <RecommendationsFilters
                             filtersCount={filtersCount}
@@ -155,6 +156,7 @@ const Main = () => {
                                 )}
                             </CardGrid>
                         </Group>
+                        </Div>
                         <CustomTabbar addTask={addTask}/>
                     </Panel>
                 </View>

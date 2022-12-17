@@ -4,6 +4,8 @@ export type Apply = {
     countOccupiedSeats: number,
     game: number,
     header: string,
+    usersLeft: number[],
+    usersRight: number[],
 }
 
 export type Game = {

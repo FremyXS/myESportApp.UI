@@ -30,6 +30,8 @@ export const applyes: Apply[] =[
         countSeats: 6,
         countOccupiedSeats: 2,
         game: 1,
+        usersLeft: [1, 2, 3, 4],
+        usersRight: [5, 6, 7, 8],
     },
     {
         id: 2,
@@ -37,6 +39,8 @@ export const applyes: Apply[] =[
         countSeats: 6,
         countOccupiedSeats: 2,
         game: 1,
+        usersLeft: [1, 2, 3, 4],
+        usersRight: [5, 6, 7, 8],
     },
     {
         id: 3,
@@ -44,6 +48,8 @@ export const applyes: Apply[] =[
         countSeats: 6,
         countOccupiedSeats: 2,
         game: 2,
+        usersLeft: [1, 2, 3, 4],
+        usersRight: [5, 6, 7, 8],
     },
     {
         id: 4,
@@ -51,6 +57,8 @@ export const applyes: Apply[] =[
         countSeats: 6,
         countOccupiedSeats: 2,
         game: 2,
+        usersLeft: [1, 2, 3, 4],
+        usersRight: [5, 6, 7, 8],
     },
     {
         id: 5,
@@ -58,5 +66,7 @@ export const applyes: Apply[] =[
         countSeats: 6,
         countOccupiedSeats: 2,
         game: 4,
+        usersLeft: [1, 2, 3, 4],
+        usersRight: [5, 6, 7, 8],
     },
 ]
