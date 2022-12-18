@@ -1,7 +1,9 @@
 import * as React from 'react';
 
-import { Icon16Dropdown } from '@vkontakte/icons';
-import { Card, Panel, PanelHeader, Tabs, TabsItem, View } from '@vkontakte/vkui';
+import { Icon16Dropdown, Icon56GhostOutline } from '@vkontakte/icons';
+import { Card, Div, Panel, PanelHeader, Placeholder, Tabs, TabsItem, View } from '@vkontakte/vkui';
+
+import ApiManager from '@Helpers/ApiManager';
 
 
 const TABS_ROTATE = {
@@ -10,6 +12,8 @@ const TABS_ROTATE = {
 }
 
 function Matches(){
+    const[meLikes, setMeLikes] = React.useState([]);
+    const[meMatches, setMematches] = React.useState([]);
     const [tabSelect, setTabSelect] = React.useState(TABS_ROTATE.likes);
     return(
         <View activePanel='panel1'>
@@ -48,12 +52,41 @@ function Matches(){
                     </TabsItem>
                     
                 </Tabs>
-                <Card>
-                        
-                </Card>
+                 {tabSelect === TABS_ROTATE.likes? 
+                    <Card>
+                        {
+                        meLikes.length > 0?
+                        <Div>
+
+                        </Div>
+                        :
+                        <Placeholder icon={<Icon56GhostOutline/>}>
+                            Вас ещё никто не лайкнул :3
+                        </Placeholder>    
+                        }
+                    </Card>
+                    :
+                    <Card>
+                        {
+                        meMatches.length > 0?
+                        <Div>
+
+                        </Div>
+                        :
+                        <Placeholder icon={<Icon56GhostOutline/>}>
+                            Жаль, но взаимности ещё нет ()
+                        </Placeholder>    
+                        }
+                    </Card> 
+                }     
             </Panel>
         </View>
     )
+
+    async function getMeLikes(){
+        const {data: based} = await ApiManager.getMeLikes();
+        setMeLikes(based.data);
+    }
 }
 
 export default Matches;

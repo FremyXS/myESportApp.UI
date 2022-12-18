@@ -298,12 +298,12 @@ const Main = () => {
       //         console.log(error);
       //       });
 
-      // const {data: based} = await ApiManager.interestingMatchingUsers();
-      // console.log(based.data);
-      // setListUsers(based);
-      // getUserAsycn(selectUserId, based);
-      setListUsers(data);
-      getUserAsycn(selectUserId, data);
+      const {data: based} = await ApiManager.interestingMatchingUsers();
+      console.log(based.data);
+      setListUsers(based.data);
+      getUserAsycn(selectUserId, based.data);
+      // setListUsers(data);
+      // getUserAsycn(selectUserId, data);
       
     }
 }

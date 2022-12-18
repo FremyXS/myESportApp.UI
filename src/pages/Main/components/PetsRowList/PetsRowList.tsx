@@ -7,11 +7,11 @@ function PetsRowList({pets}:{pets: PetType}){
         <Group>
         <Header mode="secondary">Питомец:</Header>
         <Div style={{ display: 'flex', width: '100%' }}>
+            {/* <SimpleCell>
+                <InfoRow>{pets.pet_sex === 'ma'}</InfoRow>
+            </SimpleCell> */}
             <SimpleCell>
-                <InfoRow>{pets.pet_sex}</InfoRow>
-            </SimpleCell>
-            <SimpleCell>
-                <Avatar size={40}></Avatar>
+                <Avatar size={60} src={pets.pet.image}></Avatar>
             </SimpleCell>
             <SimpleCell>
                 <InfoRow header="Имя">{pets.pet_name}</InfoRow>

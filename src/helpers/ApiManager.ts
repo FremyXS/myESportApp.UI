@@ -118,5 +118,11 @@ class ApiManager {
         const a = await axios.put(this._url + 'user/'+this.vk_id)
         return a
     }
+
+    //получение, кто тебя лайкнул
+    async getMeLikes() {
+        const a = await axios.get(this._url + 'likes/to/'+this.vk_id)
+        return a
+    }
 }
 export default new ApiManager()
