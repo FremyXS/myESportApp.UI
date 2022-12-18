@@ -59,6 +59,7 @@ class ApiManager {
     async updateInterests(interests: {
         interestId: number
     }[]) {
+
         const a = await axios.put(this._url + 'interests/' + this.vk_id, {
             interests: interests.map(e => {
                 return {
@@ -114,8 +115,8 @@ class ApiManager {
         sex?: string,
         description?: string,
         age?: number,
-    }) {
-        const a = await axios.put(this._url + 'user/'+this.vk_id)
+    },value) {
+        const a = await axios.put(this._url + 'user/'+this.vk_id, { description: value})
         return a
     }
 }

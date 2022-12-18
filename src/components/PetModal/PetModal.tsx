@@ -70,9 +70,7 @@ const PetModal = ({close, addPet}) => {
                     petSex = Sex.female;
                     break;
             }
-            addPet(new Pet(0, name, age, petSex, new Genre(1,
-                "https://animal.tden.ru/wp-content/uploads/2014/10/7063159059_2682eb89ea_b.jpg",
-                "Биголь")))
+            addPet(new Pet(0, name, age, petSex,genre))
             setIsOpen(false)
         }
         if (close) {

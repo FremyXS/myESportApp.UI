@@ -17,8 +17,8 @@ const PetCard = ({pet}) => {
             </Div>
             <hr/>
             <Div style={divStyle}>
-                <Avatar size={40} src={pet.genre.image}/>
-                <Text style={{textAlign: "center", marginLeft: "12px", fontSize: "1.2em"}}>{pet.genre.name}</Text>
+                <Avatar size={40} src={pet.genre?pet.genre.image:''}/>
+                <Text style={{textAlign: "center", marginLeft: "12px", fontSize: "1.2em"}}>{pet.genre?pet.genre.name:"name"}</Text>
             </Div>
             <Div style={divStyle}>
                 <Icon28UserCardOutline color="#0000CD"/>

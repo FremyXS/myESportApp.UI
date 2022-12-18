@@ -20,7 +20,7 @@ import {
     Icon12Check
 } from "@vkontakte/icons";
 import bridge from "@vkontakte/vk-bridge";
-import {User, Pet} from "../../types";
+import {User, Pet, Sex, Genre} from "../../types";
 import Loader from "@Components/Loader/laoder";
 import PetCard from "@Components/PetCard/petCard";
 import PetModal from "@Components/PetModal/PetModal";
@@ -37,7 +37,6 @@ const UserPage = () => {
     const [interests, setInterests] = React.useState([])
     const [isRegister, setIsRegister] = React.useState(false)
     const [isRedactDescription, setIsRedactDescription] = React.useState(false)
-    const [userProfile, setUserProfile] = React.useState(null)
     const textInput = React.createRef<HTMLInputElement>();
     React.useEffect(() => {
         const getUser = async () => {
@@ -55,7 +54,8 @@ const UserPage = () => {
 
                         await ApiManager.getUserProfile()
                             .then(e => {
-                                setUserProfile(e.data)
+                                user.description = e.data.data.description
+                                user.age = e.data.data.my_age
                                 setIsRegister(true)
                             })
                             .catch(e => {
@@ -70,18 +70,16 @@ const UserPage = () => {
         getUser().then()
     }, [])
     React.useEffect(() => {
-        const getPet = async () => {
-            const pet = await ApiManager.myPet().then(r => r.data.data).then()
-            setPet(pet)
-        }
-        getPet().then()
+        ApiManager.myPet().then(r => {
+
+            const myPet = r.data.data.my_pet;
+            const genre = new Genre(myPet.pet.pet_id,myPet.pet.image,myPet.pet.name)
+            setPet(new Pet(myPet.id,myPet.pet_name,myPet.pet_age,Sex[myPet.pet_sex],genre))
+        }).then()
+
     }, [user])
     React.useEffect(() => {
-        const getInterest = async () => {
-            const int = await ApiManager.getInterestOfUser().then(v => v.data.data)
-            setInterests(int)
-        }
-        getInterest().then()
+        ApiManager.getInterestOfUser().then(v => setInterests(v.data.data.UserInterests))
     }, [user])
 
     const getName = () => {
@@ -91,10 +89,11 @@ const UserPage = () => {
     }
     const addPet = async (pet: Pet) => {
         setPet(pet)
+        setIsRegister(true)
         ApiManager.getUserProfile()
             .then(r => {
                 console.log(r.data.data, 'user')
-
+                setIsRegister(true)
             })
             .catch(async () => {
                 await ApiManager.createUserProfile({
@@ -109,13 +108,16 @@ const UserPage = () => {
                     age: user.age,
                     interests: user.interests,
                     description: user.description
+                }).then(()=>{
+                    setIsRegister(true)
                 })
             })
     }
-    const changeDescription = () => {
+    const changeDescription = async () => {
         user.description = textInput.current.value
         setIsRedactDescription(false)
-        ApiManager.updateUserProfile({description:textInput.current.value}).then()
+        const value = await ApiManager.updateUserProfile({},textInput.current.value)
+        console.log(value)
     }
     const openPetModal = () => {
         setModal((<PetModal close={() => {
@@ -125,8 +127,12 @@ const UserPage = () => {
     const openInterestModal = () => {
         setModal((<InterestModal close={() => {
             setModal(null);
-        }} addInterest={() => {
-        }} userInterest={undefined}/>))
+        }} addInterest={(value) => {
+            setInterests(value)
+            ApiManager.updateInterests(value.map(x=>({interestId:x.interest.id}))).then(()=>{
+                console.log("change interest")
+            })
+        }} userInterest={interests}/>))
     }
     return (
         <SplitLayout modal={modal ?? ''}>
@@ -179,7 +185,7 @@ const UserPage = () => {
                                                         interests ? (<InterestCard interestings={interests}/>) : ""
                                                     }
                                                     {
-                                                        interests && interests.length < 6 ? (
+                                                        interests ? (
                                                             <CellButton before={<Icon28AddOutline/>}
                                                                         style={interests.length?{marginTop: "16px"}:{}}
                                                                         onClick={openInterestModal}>
@@ -193,14 +199,14 @@ const UserPage = () => {
 
                                         <Card mode="shadow" style={{marginTop:"40px", padding: "8px"}}>
                                             {
-                                                pet ? (<PetCard pet={pet}/>) : (
-                                                    <CellButton before={<Icon28AddOutline/>}
-                                                                style={pet?{marginTop: "16px"}:{}}
-                                                                onClick={openPetModal}>
-                                                        Изменить питомца
-                                                    </CellButton>
-                                                )
+                                                pet ? (<PetCard pet={pet}/>) :""
                                             }
+                                            <CellButton before={<Icon28AddOutline/>}
+                                                        style={pet?{marginTop: "16px"}:{}}
+                                                        onClick={openPetModal} >
+                                                Изменить питомца
+                                            </CellButton>
+
                                         </Card>
 
                                     </Div>

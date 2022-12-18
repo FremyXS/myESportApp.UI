@@ -36,15 +36,15 @@ const InterestModal = ({close, addInterest,userInterest}) => {
         setIsOpen(false)
     }
     const changeCheckBox = (value,interest) => {
-        if(userInterest.map(x=>x.id).includes(interest.id)){
+        if(userInterest.map(x=>x.interest.id).includes(interest.id)){
             if(!value.target.checked){
-                userInterest = userInterest.filter(x=>x.id != interest.id)
+                userInterest = userInterest.filter(x=>x.interest.id != interest.id)
             }
         }
         else{
             if(value.target.checked){
                 if(userInterest.length < 6){
-                    userInterest.push(new Interest(interest.id,interest.title))
+                    userInterest.push({interest:{id:interest.id,title:interest.title}})
                 }
                 else{
                     value.target.checked = false
@@ -53,11 +53,9 @@ const InterestModal = ({close, addInterest,userInterest}) => {
         }
     }
     React.useEffect(() => {
-        const fetch = async () => {
-            const inter = await ApiManager.getAllInterests()
-            setInterest(inter.data.data)
-        }
-        fetch().then()
+        ApiManager.getAllInterests().then(value=>{
+            setInterest(value.data.data)
+        })
     }, [])
     return (
         <ModalRoot
@@ -75,7 +73,7 @@ const InterestModal = ({close, addInterest,userInterest}) => {
 
                 <FormItem top={'Выбери свои увлечения'}>
                     {
-                        interests.map(e => (<Checkbox key={e.id} defaultChecked={userInterest.map(x=>x.id).includes(e.id)}
+                        interests.map(e => (<Checkbox key={e.id} defaultChecked={userInterest.map(x=>x.interest.id).includes(e.id)}
                         onClick={(event) => changeCheckBox(event,e)}>
                             {e.title}</Checkbox>))
                     }

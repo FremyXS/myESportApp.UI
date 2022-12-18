@@ -8,6 +8,7 @@ export class User{
     sex: number;
     description: string;
     interest:Interest[] = [];
+    age:number;
     // @ts-ignore
     constructor(id:number,photo,country,name,lastName,city, sex:number){
         this.id = id;
@@ -17,7 +18,8 @@ export class User{
         this.lastName = lastName;
         this.city = city;
         this.sex = sex;
-        this.description = "Юрист"
+        this.description = "Юрист";
+        this.age = 2;
     }
 }
 export class Interest{
