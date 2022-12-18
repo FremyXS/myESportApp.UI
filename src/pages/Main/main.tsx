@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, Group, HorizontalCell, HorizontalScroll, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
+import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, Group, HorizontalCell, HorizontalScroll, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, PanelHeaderContent, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
 import { Avatar, Card, CardGrid, Div, Header, InfoRow, Panel, SimpleCell, SplitCol, SplitLayout, Title, View } from '@vkontakte/vkui';
 import { UserType,  UserInfo} from '@Pages/Main/types';
 import bridge from '@vkontakte/vk-bridge';
@@ -182,13 +182,13 @@ const Main = () => {
             <View activePanel='panel1'>
             <Panel id="panel1">
                 <PanelHeader>
-                        <Div style={{display: 'flex', height: '100%', alignItems: 'center'}}>
-                        Поиск
-                        <IconButton style={{float: 'right'}}                        
-                          onClick={openModal}>
-                          <Icon20FunnelOutline/>
-                        </IconButton>
-                        </Div>
+                  <Div style={{display: 'flex', height: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+                  Поиск
+                  <IconButton style={{float: 'right'}}                        
+                    onClick={openModal}>
+                    <Icon20FunnelOutline/>
+                  </IconButton>
+                  </Div>
                 </PanelHeader>
                 <CardGrid size={'l'}>
                   <Card mode="shadow">
