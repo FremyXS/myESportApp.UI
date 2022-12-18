@@ -1,15 +1,31 @@
 import * as React from 'react';
-import { AppRoot, Root } from '@vkontakte/vkui';
+import { AppRoot, Epic } from '@vkontakte/vkui';
 import Main from "@Pages/Main/main";
-import UserPage from "@Pages/UserPage/userPage";
+import Navigation from '@Components/Navigation/Navigation';
+import Matches from '@Pages/Matches/Matches';
+
+const ID_VIEWS = {
+  search_page: 'reccomendations',
+  profile: 'profile',
+  matches: 'matches'
+};
 
 function App() {
-    return (
+  const [activePage, setActivePage] = React.useState(ID_VIEWS.search_page);
+
+  const onChangeActivePage = (e) =>{
+    setActivePage(e.currentTarget.dataset.story);
+  }
+
+  return (
     <AppRoot>
-      <Root activeView='user'>
-        <UserPage id="user"/>
-        <Main id="main"/>
-      </Root>
+      <Epic
+      activeStory={activePage}
+      tabbar={<Navigation onChangeActivePage={onChangeActivePage}/>}
+      >
+          <Main id={ID_VIEWS.search_page}/>  
+          <Matches id={ID_VIEWS.matches}/>
+        </Epic>         
     </AppRoot>
   );
 }
