@@ -12,11 +12,12 @@ import {
     Spinner,
     SplitLayout,
     SplitCol,
-    CellButton, Group, Caption
+    CellButton, Group, Caption, Input
 } from '@vkontakte/vkui';
 import {
     Icon28Notifications,
-    Icon28AddOutline
+    Icon28AddOutline,
+    Icon12Check
 } from "@vkontakte/icons";
 import bridge from "@vkontakte/vk-bridge";
 import {User, Pet} from "../../types";
@@ -35,13 +36,14 @@ const UserPage = () => {
     const [pet, setPet] = React.useState(undefined)
     const [interests, setInterests] = React.useState([])
     const [isRegister, setIsRegister] = React.useState(false)
-
+    const [isRedactDescription, setIsRedactDescription] = React.useState(false)
     const [userProfile, setUserProfile] = React.useState(null)
-
+    const textInput = React.createRef<HTMLInputElement>();
     React.useEffect(() => {
         const getUser = async () => {
             const url = new URL(window.location.href);
             const userId = url.searchParams.get('vk_user_id')
+            console.log(userId)
             bridge.send('VKWebAppGetUserInfo', {
                 user_id: Number(userId)
             })
@@ -50,7 +52,6 @@ const UserPage = () => {
                         const user = new User(Number(userId), data.photo_200, data.country.title,
                             data.first_name, data.last_name, data.city.title, data.sex)
                         setUser(user)
-
 
                         await ApiManager.getUserProfile()
                             .then(e => {
@@ -69,14 +70,8 @@ const UserPage = () => {
         getUser().then()
     }, [])
     React.useEffect(() => {
-        async function registered() {
-
-        }
-        registered().then()
-    }, [])
-    React.useEffect(() => {
         const getPet = async () => {
-            const pet = await ApiManager.myPet().then(r => r.data.data).then(() => openPetModal())
+            const pet = await ApiManager.myPet().then(r => r.data.data).then()
             setPet(pet)
         }
         getPet().then()
@@ -116,6 +111,11 @@ const UserPage = () => {
                     description: user.description
                 })
             })
+    }
+    const changeDescription = () => {
+        user.description = textInput.current.value
+        setIsRedactDescription(false)
+        ApiManager.updateUserProfile({description:textInput.current.value}).then()
     }
     const openPetModal = () => {
         setModal((<PetModal close={() => {
@@ -158,9 +158,18 @@ const UserPage = () => {
                                                 <Title style={{textAlign: "center"}}>
                                                     {user ? getName() : 'username'}
                                                 </Title>
-                                                <Caption level="1" style={{marginTop: 16, textAlign: "center"}}>
-                                                    {user.description}
-                                                </Caption>
+                                                {
+                                                    isRedactDescription?(
+                                                        <Input key={'description'} after={
+                                                        <Icon12Check color="#0000CD" onClick={changeDescription}/>
+                                                    } getRef={textInput} defaultValue={user.description}/>
+                                                    ):(
+                                                        <Caption level="1" style={{marginTop: 16, textAlign: "center"}}
+                                                        onClick={()=>{setIsRedactDescription(true)}}>
+                                                            {user.description}
+                                                        </Caption>
+                                                    )
+                                                }
                                             </Div>
                                         </Card>
                                         {
@@ -185,7 +194,8 @@ const UserPage = () => {
                                         <Card mode="shadow" style={{marginTop:"40px", padding: "8px"}}>
                                             {
                                                 pet ? (<PetCard pet={pet}/>) : (
-                                                    <CellButton before={<Icon28AddOutline/>} style={{marginTop: "16px"}}
+                                                    <CellButton before={<Icon28AddOutline/>}
+                                                                style={pet?{marginTop: "16px"}:{}}
                                                                 onClick={openPetModal}>
                                                         Изменить питомца
                                                     </CellButton>
