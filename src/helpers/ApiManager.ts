@@ -38,10 +38,18 @@ class ApiManager {
         return a
     }
 
+    //Для поиска
     async interestingMatchingUsers() {
         const a = await axios.get(this._url + 'interests/matching/' + this.vk_id)
         return a
     }
+    
+
+    async petsUsersMatching() {
+        const a = await axios.get(this._url + 'pets/matching/'+this.vk_id)
+        return a
+    }
+
 
     async myInterests() {
         const a = await axios.get(this._url + 'interests/' + this.vk_id)
@@ -71,12 +79,6 @@ class ApiManager {
         const a = await axios.get(this._url + 'pets/'+this.vk_id)
         return a
     }
-
-    async petsUsersMatching() {
-        const a = await axios.get(this._url + 'pets/matching/'+this.vk_id)
-        return a
-    }
-
 
     async createUserProfile(data: {
         "pet": {
