@@ -11,12 +11,6 @@ import { Paragraph } from '@vkontakte/vkui';
 import ApiManager from '@Helpers/ApiManager';
 import { data } from './data';
 
-enum SexSwitch {
-    'Не указан' = 0,
-    'Женский' = 1,
-    'Мужской' = 2,
-}
-
 const FILTERS_USER_SEX = [
   { value: 0, label: 'Не указан' },
   { value: 1, label: 'Хозяйка' },
@@ -294,8 +288,10 @@ const Main = () => {
       //         console.log(error);
       //       });
 
-      // const {data} = await ApiManager.interestingMatchingUsers();
-      // console.log(data.data);
+      // const {data: based} = await ApiManager.interestingMatchingUsers();
+      // console.log(based.data);
+      // setListUsers(based);
+      // getUserAsycn(selectUserId, based);
       setListUsers(data);
       getUserAsycn(selectUserId, data);
       
