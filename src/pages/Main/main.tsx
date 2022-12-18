@@ -6,6 +6,7 @@ import bridge from '@vkontakte/vk-bridge';
 import { Icon12Cancel, Icon12Check, Icon20FunnelOutline, Icon24Dismiss } from '@vkontakte/icons';
 import PetsRowList from './components/PetsRowList/PetsRowList';
 // 186800902
+import { Paragraph } from '@vkontakte/vkui';
 
 enum SexSwitch {
     'Не указан' = 0,
@@ -215,7 +216,7 @@ const Main = () => {
                               </Title>
                           </Div>
                           <Div>
-                              <Header mode="secondary">{searchUser.desk}</Header>
+                              <Paragraph style={{wordBreak: 'break-all', color: '#979797'}}>{searchUser.desk}</Paragraph>
                           </Div>
                         </Group>
                         <PetsRowList pets={searchUser.pets}/>
