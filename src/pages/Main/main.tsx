@@ -1,18 +1,14 @@
 import * as React from 'react'
-import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, Group, HorizontalCell, HorizontalScroll, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
+import { Button, ButtonGroup, Checkbox, FormItem, FormLayout, Group, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, PanelHeaderContent, Placeholder, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
 import { Avatar, Card, CardGrid, Div, Header, InfoRow, Panel, SimpleCell, SplitCol, SplitLayout, Title, View } from '@vkontakte/vkui';
 import { UserType,  UserInfo} from '@Pages/Main/types';
 import bridge from '@vkontakte/vk-bridge';
-import { Icon12Cancel, Icon12Check, Icon20FunnelOutline, Icon24Dismiss } from '@vkontakte/icons';
+import { Icon12Cancel, Icon12Check, Icon20FunnelOutline, Icon24Dismiss, Icon56ReportOutline } from '@vkontakte/icons';
 import PetsRowList from './components/PetsRowList/PetsRowList';
 // 186800902
 import { Paragraph } from '@vkontakte/vkui';
 
-enum SexSwitch {
-    'Не указан' = 0,
-    'Женский' = 1,
-    'Мужской' = 2,
-}
+import ApiManager from '@Helpers/ApiManager';
 
 const FILTERS_USER_SEX = [
   { value: 0, label: 'Не указан' },
@@ -26,53 +22,41 @@ const FILTERS_DOG_SEX = [
     { value: 2, label: 'Самец' },
 ]
 
+const STATUS_LIKE = {
+  accepted: 'accepted',
+  canceled: 'canceled',
+}
+
 const Main = () => {
-    const[searchUser, setSearchUser] = React.useState<UserType>({
-        vkId: 0,
-        desk: "dkfjlsjhdklfjhakljfhsalkfjahlsahfksbjksabnfm,sabfsas,bafsbmnsabfmnsabfmsafmnasbfm,bsa,mfbnsasa",
-        pets: [
-            {
-                name: 'Серж',
-                age: 2,
-                gener: "Псина"
-            },
-            {
-                name: 'Котя',
-                age: 6,
-                gener: "Кот"
-            },
-        ],
-        interests:[
-            {
-                id: '1',
-                label: 'СЕКС'
-            },
-            {
-                id: '2',
-                label: 'АНАЛ'
-            },
-            {
-                id: '3',
-                label: 'ТРОЛЬ'
-            },
-        ]
-    })
+    const[listUsers, setListUsers] = React.useState<UserType[]>([]);
+    const[selectUserId, setSelectUserId] = React.useState(0);
+    const[selectUser, setSelectUser] = React.useState<UserType>({
+      vk_id: 0,
+    city: '',
+    my_pet: {
+      pet: {
+        pet_id: 0,
+        name: '',
+        image: ''
+      },
+      pet_sex: '',
+      pet_name: '',
+      pet_age: 0
+  },
+    my_age: 0,
+    description: '',
+    my_sex: ''
+    });
 
     const [userInfo, setUserInfo] = React.useState<UserInfo>({
-        first_name: '',
+      first_name: '',
         last_name: '',
-        sex: 1,
-        city: {
-            title: '',
-        },
-        country: {
-            title: '',
-        },
         photo_max_orig: '',
     });
 
+    const [isActive, setIsActive] = React.useState(true);
     React.useEffect(() => {
-        getUserAsync();
+        getUsersListAsync();
     }, [])
 
     const [filtersModalOpened, setFiltersModalOpened] = React.useState(false);
@@ -83,11 +67,23 @@ const Main = () => {
     
 
     function onAppenedClick(){
-
+      if(selectUserId + 1 >= listUsers.length){        
+        setIsActive(false);
+        return;
+      }
+      ApiManager.setLike(selectUser.vk_id, STATUS_LIKE.accepted);
+      getUserAsycn(selectUserId + 1, listUsers)
+      setSelectUserId(selectUserId + 1);
     }
 
     function onCancelClick(){
-
+      if(selectUserId + 1 >= listUsers.length){
+        setIsActive(false);
+        return;
+      }
+      ApiManager.setLike(selectUser.vk_id, STATUS_LIKE.canceled);
+      getUserAsycn(selectUserId + 1, listUsers)
+      setSelectUserId(selectUserId + 1);
     }
 
     const openModal = () =>{
@@ -188,90 +184,103 @@ const Main = () => {
           </ModalPage>
         </ModalRoot>
       );
-
+    console.log(userInfo)
     return(
         <SplitLayout modal={modal}>
             <SplitCol>
             <View activePanel='panel1'>
             <Panel id="panel1">
                 <PanelHeader>
-                        <Div style={{display: 'flex', height: '100%', alignItems: 'center'}}>
-                        Поиск
-                        <IconButton style={{float: 'right'}}                        
-                          onClick={openModal}>
-                          <Icon20FunnelOutline/>
-                        </IconButton>
-                        </Div>
+                  <Div style={{display: 'flex', height: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+                  Поиск
+                  <IconButton style={{float: 'right'}}                        
+                    onClick={openModal}>
+                    <Icon20FunnelOutline/>
+                  </IconButton>
+                  </Div>
                 </PanelHeader>
+                {isActive? 
                 <CardGrid size={'l'}>
-                  <Card mode="shadow">
-                        <Group>
-                          <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center', width: '100%'}}>
-                              <Avatar size={225} src={userInfo.photo_max_orig}>                            
-                              </Avatar>
-                          </Div>
-                          <Div>
-                              <Title>
-                                  {userInfo.first_name} {userInfo.last_name}
-                              </Title>
-                          </Div>
-                          <Div>
-                              <Paragraph style={{wordBreak: 'break-all', color: '#979797'}}>{searchUser.desk}</Paragraph>
-                          </Div>
-                        </Group>
-                        <PetsRowList pets={searchUser.pets}/>
-                        <Group>
+                <Card mode="shadow">
+                      <Group>
+                        
+                        <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center', width: '100%'}}>
+                            <Avatar size={225} src={userInfo.photo_max_orig}>                            
+                            </Avatar>
+                        </Div>
+                        <Div>
+                            <Title>
+                                {userInfo.first_name} {userInfo.last_name}
+                            </Title>
+                        </Div>
+                        <Div>
+                            <Paragraph style={{wordBreak: 'break-all', color: '#979797'}}>
+                              {selectUser.description}
+                            </Paragraph>
+                        </Div>
+                      </Group>
+                       <PetsRowList pets={selectUser.my_pet}/>
+                      <Group>
                         <Div>
                             <Header mode="secondary">О пользователе:</Header>
                             <SimpleCell multiline>
-                                    <InfoRow header="Город">{userInfo.city.title}</InfoRow>
+                                    <InfoRow header="Город">{selectUser.city}</InfoRow>
                             </SimpleCell>
                             <SimpleCell multiline>
-                                    <InfoRow header="Пол">{SexSwitch[userInfo.sex]}</InfoRow>
+                                    <InfoRow header="Пол">{selectUser.my_sex}</InfoRow>
                             </SimpleCell>
                         </Div>                          
-                        <FormItem top="Интересы" style={{width:'100%'}}>
-                            <ChipsInput
-                            readOnly
-                            value={searchUser.interests}
-                            renderChip={({ id, label, ...rest }) => (
-                                <Chip
-                                  value={id}
-                                  removable={false}
-                                  {...rest}
-                                >
-                                  {label}
-                                </Chip>
-                              )}
-                            />
-                        </FormItem>       
-                        </Group>                 
-                    </Card>
-                    <Div style={{width: '100%'}}>
-                    <ButtonGroup mode="horizontal" gap="m" stretched>
-                            <Button size='l' appearance="negative" stretched onClick={() => onAppenedClick()}>
-                                <Icon12Cancel></Icon12Cancel>
-                            </Button>    
-                            <Button size='l' appearance="positive" stretched onClick={() => onCancelClick()}>
-                                <Icon12Check></Icon12Check>
-                            </Button>                        
-                        </ButtonGroup>
+                      {/* <FormItem top="Интересы" style={{width:'100%'}}>
+                          <ChipsInput
+                          readOnly
+                          value={selectUser.interests}
+                          renderChip={({ id, label, ...rest }) => (
+                              <Chip
+                                value={id}
+                                removable={false}
+                                {...rest}
+                              >
+                                {label}
+                              </Chip>
+                            )}
+                          />
+                      </FormItem>        */}
+                      </Group>                       
+                  </Card>
+                  <Div style={{width: '100%'}}>
+                      <ButtonGroup mode="horizontal" gap="m" stretched>
+                          <Button size='l' appearance="negative" stretched onClick={() => onAppenedClick()}>
+                              <Icon12Cancel></Icon12Cancel>
+                          </Button>    
+                          <Button size='l' appearance="positive" stretched onClick={() => onCancelClick()}>
+                              <Icon12Check></Icon12Check>
+                          </Button>                        
+                      </ButtonGroup>
                     </Div>
-
-                </CardGrid>
+              </CardGrid>
+              :
+              <Placeholder icon={<Icon56ReportOutline/>} style={{height: '100vh'}}>
+                Упс, кикого не удалось найти. Пожалуйста измините фильтр поиска или зайдите чуть позже
+              </Placeholder>
+              }
+                
             </Panel>
-        </View> 
-            </SplitCol>
-        </SplitLayout>
+          </View> 
+        </SplitCol>
+      </SplitLayout>
         
     )
+    
+    async function getUserAsycn(id: number, data: UserType[]) {
+      setSelectUser(data[id]);
+      getUserByID(data[id].vk_id)
+    }
 
-    async function getUserAsync() {
+    async function getUserByID(vkId:number) {
        await bridge.send('VKWebAppGetUserInfo', {
-            user_id: 186800902
+            user_id: vkId
             })
             .then((data) => { 
-                console.log(data)
                 setUserInfo(data);
             })
             .catch((error) => {
@@ -279,5 +288,28 @@ const Main = () => {
               console.log(error);
             });
     }
+
+    async function getUsersListAsync() {
+      
+      //  await bridge.send('VKWebAppGetUserInfo', {
+      //       user_id: 186800902
+      //       })
+      //       .then((data) => { 
+      //           console.log(data)
+      //           setUserInfo(data);
+      //       })
+      //       .catch((error) => {
+      //         // Ошибка
+      //         console.log(error);
+      //       });
+
+      const {data: based} = await ApiManager.interestingMatchingUsers();
+      setListUsers(based.data);
+      getUserAsycn(selectUserId, based.data);
+      // setListUsers(data);
+      // getUserAsycn(selectUserId, data);
+      
+    }
 }
+
 export default Main

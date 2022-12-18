@@ -1,29 +1,25 @@
 export type UserType = {
-    vkId: number,
-    desk: string,
-    pets: PetType[]
-    interests: {
-        id: string,
-        label: string,
-    }[],
-
+    vk_id: number,
+    city: string,
+    my_pet: PetType,
+    my_age: number,
+    description: string,
+    my_sex: string
 }
 
 export type PetType = {
-    name: string,
-    age: number,
-    gener: string
+    pet: {
+      pet_id: number,
+      name: string,
+      image: string
+    },
+    pet_sex: string,
+    pet_name: string,
+    pet_age: number
 }
 
 export type UserInfo = {
         first_name: string,
         last_name: string,
-        sex: number,
-        city: {
-            title: string,
-        },
-        country: {
-            title: string;
-        };
         photo_max_orig?: string;
 }

@@ -1,7 +1,10 @@
 import * as React from 'react';
 
-import { Icon16Dropdown } from '@vkontakte/icons';
-import { Card, Panel, PanelHeader, Tabs, TabsItem, View } from '@vkontakte/vkui';
+import { Icon16Dropdown, Icon56GhostOutline } from '@vkontakte/icons';
+import { Card, Div, Group, Panel, PanelHeader, Placeholder, Tabs, TabsItem, View } from '@vkontakte/vkui';
+
+import ApiManager from '@Helpers/ApiManager';
+import ColumnListInfo from './components/ColumnListInfo/ColumnListInfo';
 
 
 const TABS_ROTATE = {
@@ -10,7 +13,13 @@ const TABS_ROTATE = {
 }
 
 function Matches(){
+    const[meLikes, setMeLikes] = React.useState<number[]>([]);
+    const[meMatches, setMematches] = React.useState<number[]>([]);
     const [tabSelect, setTabSelect] = React.useState(TABS_ROTATE.likes);
+
+    React.useEffect(() => {
+        getMeLikes();
+    }, [])
     return(
         <View activePanel='panel1'>
             <Panel id='panel1'>
@@ -48,12 +57,35 @@ function Matches(){
                     </TabsItem>
                     
                 </Tabs>
-                <Card>
-                        
-                </Card>
+                <Group>
+                {tabSelect === TABS_ROTATE.likes? 
+                    meLikes.length > 0?
+                    <ColumnListInfo users={meLikes} />
+                    :
+                    <Placeholder icon={<Icon56GhostOutline/>} style={{height: '100vh'}}>
+                        Вас ещё никто не лайкнул :3
+                    </Placeholder>    
+                    :
+                    meMatches.length > 0?
+                    <ColumnListInfo users={meMatches} />
+                    :
+                    <Placeholder icon={<Icon56GhostOutline/>} style={{height: '100vh'}}>
+                        Жаль, но взаимности ещё нет ()
+                    </Placeholder>    
+                }     
+                </Group>
+                 
             </Panel>
         </View>
     )
+
+    async function getMeLikes(){
+        const {data: based} = await ApiManager.getMeLikes();
+        setMeLikes(based.data);
+        const {data: based2} = await ApiManager.getMeReciprocal();
+        setMematches(based2.data);
+        console.log(based2.data);
+    }
 }
 
 export default Matches;

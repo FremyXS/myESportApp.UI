@@ -1,36 +1,28 @@
-import { Avatar, Div, Group, Header, HorizontalCell, HorizontalScroll, InfoRow, SimpleCell } from '@vkontakte/vkui';
+import { Avatar, Div, Group, Header, InfoRow, SimpleCell } from '@vkontakte/vkui';
 import * as React from 'react';
 import { PetType } from '@Pages/Main/types';
 
-function PetsRowList({pets}:{pets: PetType[]}){
+function PetsRowList({pets}:{pets: PetType}){
     return (
         <Group>
-        <Header mode="secondary">Питомцы:</Header>
-            <HorizontalScroll
-            showArrows
-            getScrollToLeft={(i) => i - 120}
-            getScrollToRight={(i) => i + 120}>                            
-            <div style={{display: 'flex'}}>
-            {pets.map((el, index) =>            
-                <HorizontalCell key={index} size='l'>
-                    <Div style={{ display: 'flex', width: '100%' }}>
-                        <SimpleCell>
-                            <Avatar size={40}></Avatar>
-                        </SimpleCell>
-                        <SimpleCell>
-                            <InfoRow header="Имя">{el.name}</InfoRow>
-                        </SimpleCell>
-                        <SimpleCell>
-                            <InfoRow header="Парода">{el.gener}</InfoRow>
-                        </SimpleCell>
-                        <SimpleCell>
-                            <InfoRow header="Возраст">{el.age}</InfoRow>
-                        </SimpleCell>
-                    </Div>
-                </HorizontalCell>            
-            )}   
-            </div>       
-            </HorizontalScroll>
+        <Header mode="secondary">Питомец:</Header>
+        <Div style={{ display: 'flex', width: '100%' }}>
+            {/* <SimpleCell>
+                <InfoRow>{pets.pet_sex === 'ma'}</InfoRow>
+            </SimpleCell> */}
+            <SimpleCell>
+                <Avatar size={60} src={pets.pet.image}></Avatar>
+            </SimpleCell>
+            <SimpleCell>
+                <InfoRow header="Имя">{pets.pet_name}</InfoRow>
+            </SimpleCell>
+            <SimpleCell>
+                <InfoRow header="Парода">{pets.pet.name}</InfoRow>
+            </SimpleCell>
+            <SimpleCell>
+                <InfoRow header="Возраст">{pets.pet_age}</InfoRow>
+            </SimpleCell>
+            </Div>
         </Group>
     )
 }
