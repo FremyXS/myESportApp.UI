@@ -32,7 +32,6 @@ const PetModal = ({close, addPet}) => {
         console.log('do emit!')
         if (search.length >= 3) {
             socket.emit('breedSearch', search, (response) => {
-                console.log(response)
                 setFilteredDogs(response)
             });
         }
@@ -71,8 +70,10 @@ const PetModal = ({close, addPet}) => {
                     petSex = Sex.female;
                     break;
             }
-            console.log(genre)
-            await addPet(new Pet(0, name, age, petSex, genre))
+            addPet(new Pet(0, name, age, petSex, new Genre(1,
+                "https://animal.tden.ru/wp-content/uploads/2014/10/7063159059_2682eb89ea_b.jpg",
+                "Биголь")))
+            setIsOpen(false)
         }
         if (close) {
             await close()

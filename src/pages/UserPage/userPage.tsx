@@ -91,7 +91,7 @@ const UserPage = () => {
     }
     const addPet = async (pet: Pet) => {
         setPet(pet)
-        await ApiManager.getUserProfile()
+        ApiManager.getUserProfile()
             .then(r => {
                 console.log(r.data.data, 'user')
 
