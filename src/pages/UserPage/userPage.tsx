@@ -42,7 +42,6 @@ const UserPage = () => {
         const getUser = async () => {
             const url = new URL(window.location.href);
             const userId = url.searchParams.get('vk_user_id')
-            console.log(userId)
             bridge.send('VKWebAppGetUserInfo', {
                 user_id: Number(userId)
             })
