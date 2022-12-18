@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, Group, HorizontalCell, HorizontalScroll, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, PanelHeaderContent, Placeholder, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
+import { Button, ButtonGroup, Checkbox, FormItem, FormLayout, Group, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, PanelHeaderContent, Placeholder, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
 import { Avatar, Card, CardGrid, Div, Header, InfoRow, Panel, SimpleCell, SplitCol, SplitLayout, Title, View } from '@vkontakte/vkui';
 import { UserType,  UserInfo} from '@Pages/Main/types';
 import bridge from '@vkontakte/vk-bridge';
@@ -9,7 +9,6 @@ import PetsRowList from './components/PetsRowList/PetsRowList';
 import { Paragraph } from '@vkontakte/vkui';
 
 import ApiManager from '@Helpers/ApiManager';
-import { data } from './data';
 
 const FILTERS_USER_SEX = [
   { value: 0, label: 'Не указан' },
@@ -22,6 +21,11 @@ const FILTERS_DOG_SEX = [
     { value: 1, label: 'Самка' },
     { value: 2, label: 'Самец' },
 ]
+
+const STATUS_LIKE = {
+  accepted: 'accepted',
+  canceled: 'canceled',
+}
 
 const Main = () => {
     const[listUsers, setListUsers] = React.useState<UserType[]>([]);
@@ -67,6 +71,7 @@ const Main = () => {
         setIsActive(false);
         return;
       }
+      ApiManager.setLike(selectUser.vk_id, STATUS_LIKE.accepted);
       getUserAsycn(selectUserId + 1, listUsers)
       setSelectUserId(selectUserId + 1);
     }
@@ -76,6 +81,7 @@ const Main = () => {
         setIsActive(false);
         return;
       }
+      ApiManager.setLike(selectUser.vk_id, STATUS_LIKE.canceled);
       getUserAsycn(selectUserId + 1, listUsers)
       setSelectUserId(selectUserId + 1);
     }
@@ -253,7 +259,7 @@ const Main = () => {
                     </Div>
               </CardGrid>
               :
-              <Placeholder icon={<Icon56ReportOutline/>}>
+              <Placeholder icon={<Icon56ReportOutline/>} style={{height: '100vh'}}>
                 Упс, кикого не удалось найти. Пожалуйста измините фильтр поиска или зайдите чуть позже
               </Placeholder>
               }
@@ -275,7 +281,6 @@ const Main = () => {
             user_id: vkId
             })
             .then((data) => { 
-                console.log(data);
                 setUserInfo(data);
             })
             .catch((error) => {
@@ -299,7 +304,6 @@ const Main = () => {
       //       });
 
       const {data: based} = await ApiManager.interestingMatchingUsers();
-      console.log(based.data);
       setListUsers(based.data);
       getUserAsycn(selectUserId, based.data);
       // setListUsers(data);

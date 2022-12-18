@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import { Icon16Dropdown, Icon56GhostOutline } from '@vkontakte/icons';
-import { Card, Div, Panel, PanelHeader, Placeholder, Tabs, TabsItem, View } from '@vkontakte/vkui';
+import { Card, Div, Group, Panel, PanelHeader, Placeholder, Tabs, TabsItem, View } from '@vkontakte/vkui';
 
 import ApiManager from '@Helpers/ApiManager';
+import ColumnListInfo from './components/ColumnListInfo/ColumnListInfo';
 
 
 const TABS_ROTATE = {
@@ -12,9 +13,13 @@ const TABS_ROTATE = {
 }
 
 function Matches(){
-    const[meLikes, setMeLikes] = React.useState([]);
-    const[meMatches, setMematches] = React.useState([]);
+    const[meLikes, setMeLikes] = React.useState<number[]>([]);
+    const[meMatches, setMematches] = React.useState<number[]>([]);
     const [tabSelect, setTabSelect] = React.useState(TABS_ROTATE.likes);
+
+    React.useEffect(() => {
+        getMeLikes();
+    }, [])
     return(
         <View activePanel='panel1'>
             <Panel id='panel1'>
@@ -52,33 +57,24 @@ function Matches(){
                     </TabsItem>
                     
                 </Tabs>
-                 {tabSelect === TABS_ROTATE.likes? 
-                    <Card>
-                        {
-                        meLikes.length > 0?
-                        <Div>
-
-                        </Div>
-                        :
-                        <Placeholder icon={<Icon56GhostOutline/>}>
-                            Вас ещё никто не лайкнул :3
-                        </Placeholder>    
-                        }
-                    </Card>
+                <Group>
+                {tabSelect === TABS_ROTATE.likes? 
+                    meLikes.length > 0?
+                    <ColumnListInfo users={meLikes} />
                     :
-                    <Card>
-                        {
-                        meMatches.length > 0?
-                        <Div>
-
-                        </Div>
-                        :
-                        <Placeholder icon={<Icon56GhostOutline/>}>
-                            Жаль, но взаимности ещё нет ()
-                        </Placeholder>    
-                        }
-                    </Card> 
+                    <Placeholder icon={<Icon56GhostOutline/>} style={{height: '100vh'}}>
+                        Вас ещё никто не лайкнул :3
+                    </Placeholder>    
+                    :
+                    meMatches.length > 0?
+                    <ColumnListInfo users={meMatches} />
+                    :
+                    <Placeholder icon={<Icon56GhostOutline/>} style={{height: '100vh'}}>
+                        Жаль, но взаимности ещё нет ()
+                    </Placeholder>    
                 }     
+                </Group>
+                 
             </Panel>
         </View>
     )
@@ -86,6 +82,9 @@ function Matches(){
     async function getMeLikes(){
         const {data: based} = await ApiManager.getMeLikes();
         setMeLikes(based.data);
+        const {data: based2} = await ApiManager.getMeReciprocal();
+        setMematches(based2.data);
+        console.log(based2.data);
     }
 }
 

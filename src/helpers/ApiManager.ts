@@ -2,6 +2,7 @@ import DataManager from "@Helpers/DataManager";
 import {Genre, Pet, User, Sex, Interest} from "../types";
 import axios from "axios";
 import UserPage from "@Pages/UserPage/userPage";
+import bridge from "@vkontakte/vk-bridge";
 
 class ApiManager {
     vk_id: any
@@ -119,10 +120,33 @@ class ApiManager {
         return a
     }
 
+    async getVkById(id: number) {
+        const a = await bridge.send('VKWebAppGetUserInfo', {
+            user_id: id
+            });
+        
+        return a;
+    }
+
     //получение, кто тебя лайкнул
     async getMeLikes() {
         const a = await axios.get(this._url + 'likes/to/'+this.vk_id)
         return a
+    }
+
+    async getMeReciprocal() {
+        const a = await axios.get(this._url + 'likes/reciprocal/'+this.vk_id)
+        return a
+    }
+
+    //лайкнул
+
+    async setLike(toId: number, status: string){
+        await axios.post(this._url + 'likes/',{
+            status: status,
+            user_to_like: toId,
+            my_vk_id: this.vk_id
+        })
     }
 }
 export default new ApiManager()
