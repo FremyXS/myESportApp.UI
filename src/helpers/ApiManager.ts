@@ -3,7 +3,7 @@ import {Genre, Pet, User, Sex, Interest} from "../types";
 import axios from "axios";
 import UserPage from "@Pages/UserPage/userPage";
 
-export default class ApiManager {
+class ApiManager {
     vk_id: any
 
     constructor() {
@@ -116,6 +116,5 @@ export default class ApiManager {
         const a = await axios.put(this._url + 'user/'+this.vk_id)
         return a
     }
-
-
 }
+export default new ApiManager()

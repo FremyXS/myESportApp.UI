@@ -3,7 +3,8 @@ import MockManager from "@Helpers/MockManager";
 import * as React from "react";
 import {Pet, Sex} from "../../types";
 import {
-    CustomSelectOptionInterface, FormItem, FormLayout, IconButton, Input,
+    Card,
+    CustomSelectOptionInterface, Div, FormItem, FormLayout, IconButton, Input,
     ModalPage,
     ModalPageHeader,
     PanelHeaderBack,
@@ -14,15 +15,14 @@ import {ModalRoot} from "@vkontakte/vkui/dist/components/ModalRoot/ModalRootAdap
 import {Icon28Done} from "@vkontakte/icons";
 import DataManager from "@Helpers/DataManager";
 import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
+import ApiManager from "@Helpers/ApiManager";
 
 const InterestModal = ({close, addInterest}) => {
-    const [isOpen,setIsOpen] = React.useState(true)
+    const [isOpen, setIsOpen] = React.useState(true)
     const manager: DataManager = new MockManager();
     const [interests, setInterest] = useState([]);
     const closeModal = async () => {
-        const a = new ApiManager()
-        await a.getInterestOfUser().then(r => console.log(r)).catch(e => console.log(e))
-        if(close){
+        if (close) {
             close()
         }
         setIsOpen(false)
@@ -31,37 +31,41 @@ const InterestModal = ({close, addInterest}) => {
         if (addInterest) {
 
         }
-        if(close){
+        if (close) {
             close()
         }
         setIsOpen(false)
     }
-    React.useEffect(()=>{
-        manager.getInterests().then(value=>{
-            setInterest(value)
-        })
-    },[])
+    React.useEffect(() => {
+        const fetch = async () => {
+            const inte = await ApiManager.getAllInterests()
+            console.log(inte.data.data)
+            setInterest(inte.data.data)
+        }
+        fetch().then()
+    }, [])
     console.log(interests)
-    return(
+    return (
         <ModalRoot
             activeModal={isOpen ? "interest" : null}
             onClose={closeModal}>
-            <ModalPage id={"interest"} header={
+            <ModalPage settlingHeight={100} id={"interest"} header={
                 <ModalPageHeader
-                    before={<PanelHeaderBack onClick={closeModal} />}
+                    before={<PanelHeaderBack onClick={closeModal}/>}
                     after={<PanelHeaderButton>
-                        <Icon28Done onClick={acceptModal} />
+                        <Icon28Done onClick={acceptModal}/>
                     </PanelHeaderButton>
                     }>
                     Увлечение
                 </ModalPageHeader>}>
-                <FormLayout>
-                    <FormItem top="Выберите свои увлечения">
-                        <Checkbox defaultChecked>Я участвую в сборе</Checkbox>
-                        {interests?interests.map(value=> (<Checkbox key={value.id}>{value.title}</Checkbox>)
-                        ):''}
-                    </FormItem>
-                </FormLayout>
+
+                <FormItem top={'Выбери свои увлечения'}>
+                    {
+                        interests.map(e => (<Checkbox key={e.id}>{e.title}</Checkbox>))
+                    }
+                </FormItem>
+
+
             </ModalPage>
         </ModalRoot>
     )
