@@ -7,8 +7,10 @@ class ApiManager {
     vk_id: any
 
     constructor() {
-        const url = new URL(window.location.href);
-        this.vk_id = url.searchParams.get('vk_user_id')
+        // const url = new URL(window.location.href);
+        // const url = 1;
+        // this.vk_id = url.searchParams.get('vk_user_id')
+        this.vk_id = 1;
     }
 
     getInterests(): Promise<Interest[]> {

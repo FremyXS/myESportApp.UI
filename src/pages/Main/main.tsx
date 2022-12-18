@@ -8,6 +8,9 @@ import PetsRowList from './components/PetsRowList/PetsRowList';
 // 186800902
 import { Paragraph } from '@vkontakte/vkui';
 
+import ApiManager from '@Helpers/ApiManager';
+import { data } from './data';
+
 enum SexSwitch {
     'Не указан' = 0,
     'Женский' = 1,
@@ -27,52 +30,34 @@ const FILTERS_DOG_SEX = [
 ]
 
 const Main = () => {
-    const[searchUser, setSearchUser] = React.useState<UserType>({
-        vkId: 0,
-        desk: "dkfjlsjhdklfjhakljfhsalkfjahlsahfksbjksabnfm,sabfsas,bafsbmnsabfmnsabfmsafmnasbfm,bsa,mfbnsasa",
-        pets: [
-            {
-                name: 'Серж',
-                age: 2,
-                gener: "Псина"
-            },
-            {
-                name: 'Котя',
-                age: 6,
-                gener: "Кот"
-            },
-        ],
-        interests:[
-            {
-                id: '1',
-                label: 'СЕКС'
-            },
-            {
-                id: '2',
-                label: 'АНАЛ'
-            },
-            {
-                id: '3',
-                label: 'ТРОЛЬ'
-            },
-        ]
-    })
+    const[listUsers, setListUsers] = React.useState<UserType[]>([]);
+    const[selectUserId, setSelectUserId] = React.useState(0);
+    const[selectUser, setSelectUser] = React.useState<UserType>({
+      vk_id: 0,
+    city: '',
+    my_pet: {
+      pet: {
+        pet_id: 0,
+        name: '',
+        image: ''
+      },
+      pet_sex: '',
+      pet_name: '',
+      pet_age: 0
+  },
+    my_age: 0,
+    description: '',
+    my_sex: ''
+    });
 
     const [userInfo, setUserInfo] = React.useState<UserInfo>({
-        first_name: '',
+      first_name: '',
         last_name: '',
-        sex: 1,
-        city: {
-            title: '',
-        },
-        country: {
-            title: '',
-        },
         photo_max_orig: '',
     });
 
     React.useEffect(() => {
-        getUserAsync();
+        getUsersListAsync();
     }, [])
 
     const [filtersModalOpened, setFiltersModalOpened] = React.useState(false);
@@ -83,11 +68,19 @@ const Main = () => {
     
 
     function onAppenedClick(){
-
+      if(selectUserId + 1 >= listUsers.length){
+        return;
+      }
+      getUserAsycn(selectUserId + 1, listUsers)
+      setSelectUserId(selectUserId + 1);
     }
 
     function onCancelClick(){
-
+      if(selectUserId + 1 >= listUsers.length){
+        return;
+      }
+      getUserAsycn(selectUserId + 1, listUsers)
+      setSelectUserId(selectUserId + 1);
     }
 
     const openModal = () =>{
@@ -188,7 +181,7 @@ const Main = () => {
           </ModalPage>
         </ModalRoot>
       );
-
+    console.log(userInfo)
     return(
         <SplitLayout modal={modal}>
             <SplitCol>
@@ -206,6 +199,7 @@ const Main = () => {
                 <CardGrid size={'l'}>
                   <Card mode="shadow">
                         <Group>
+                          
                           <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center', width: '100%'}}>
                               <Avatar size={225} src={userInfo.photo_max_orig}>                            
                               </Avatar>
@@ -216,24 +210,26 @@ const Main = () => {
                               </Title>
                           </Div>
                           <Div>
-                              <Paragraph style={{wordBreak: 'break-all', color: '#979797'}}>{searchUser.desk}</Paragraph>
+                              <Paragraph style={{wordBreak: 'break-all', color: '#979797'}}>
+                                {selectUser.description}
+                              </Paragraph>
                           </Div>
                         </Group>
-                        <PetsRowList pets={searchUser.pets}/>
+                         <PetsRowList pets={selectUser.my_pet}/>
                         <Group>
-                        <Div>
-                            <Header mode="secondary">О пользователе:</Header>
-                            <SimpleCell multiline>
-                                    <InfoRow header="Город">{userInfo.city.title}</InfoRow>
-                            </SimpleCell>
-                            <SimpleCell multiline>
-                                    <InfoRow header="Пол">{SexSwitch[userInfo.sex]}</InfoRow>
-                            </SimpleCell>
-                        </Div>                          
-                        <FormItem top="Интересы" style={{width:'100%'}}>
+                          <Div>
+                              <Header mode="secondary">О пользователе:</Header>
+                              <SimpleCell multiline>
+                                      <InfoRow header="Город">{selectUser.city}</InfoRow>
+                              </SimpleCell>
+                              <SimpleCell multiline>
+                                      <InfoRow header="Пол">{selectUser.my_sex}</InfoRow>
+                              </SimpleCell>
+                          </Div>                          
+                        {/* <FormItem top="Интересы" style={{width:'100%'}}>
                             <ChipsInput
                             readOnly
-                            value={searchUser.interests}
+                            value={selectUser.interests}
                             renderChip={({ id, label, ...rest }) => (
                                 <Chip
                                   value={id}
@@ -244,11 +240,11 @@ const Main = () => {
                                 </Chip>
                               )}
                             />
-                        </FormItem>       
-                        </Group>                 
+                        </FormItem>        */}
+                        </Group>                       
                     </Card>
                     <Div style={{width: '100%'}}>
-                    <ButtonGroup mode="horizontal" gap="m" stretched>
+                        <ButtonGroup mode="horizontal" gap="m" stretched>
                             <Button size='l' appearance="negative" stretched onClick={() => onAppenedClick()}>
                                 <Icon12Cancel></Icon12Cancel>
                             </Button>    
@@ -256,22 +252,26 @@ const Main = () => {
                                 <Icon12Check></Icon12Check>
                             </Button>                        
                         </ButtonGroup>
-                    </Div>
-
+                      </Div>
                 </CardGrid>
             </Panel>
-        </View> 
-            </SplitCol>
-        </SplitLayout>
+          </View> 
+        </SplitCol>
+      </SplitLayout>
         
     )
+    
+    async function getUserAsycn(id: number, data: UserType[]) {
+      setSelectUser(data[id]);
+      getUserByID(data[id].vk_id)
+    }
 
-    async function getUserAsync() {
+    async function getUserByID(vkId:number) {
        await bridge.send('VKWebAppGetUserInfo', {
-            user_id: 186800902
+            user_id: vkId
             })
             .then((data) => { 
-                console.log(data)
+                console.log(data);
                 setUserInfo(data);
             })
             .catch((error) => {
@@ -279,5 +279,27 @@ const Main = () => {
               console.log(error);
             });
     }
+
+    async function getUsersListAsync() {
+      
+      //  await bridge.send('VKWebAppGetUserInfo', {
+      //       user_id: 186800902
+      //       })
+      //       .then((data) => { 
+      //           console.log(data)
+      //           setUserInfo(data);
+      //       })
+      //       .catch((error) => {
+      //         // Ошибка
+      //         console.log(error);
+      //       });
+
+      // const {data} = await ApiManager.interestingMatchingUsers();
+      // console.log(data.data);
+      setListUsers(data);
+      getUserAsycn(selectUserId, data);
+      
+    }
 }
+
 export default Main

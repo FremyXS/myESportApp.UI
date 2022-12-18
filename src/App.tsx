@@ -3,6 +3,7 @@ import { AppRoot, Epic } from '@vkontakte/vkui';
 import Main from "@Pages/Main/main";
 import Navigation from '@Components/Navigation/Navigation';
 import Matches from '@Pages/Matches/Matches';
+import UserPage from '@Pages/UserPage/userPage';
 
 const ID_VIEWS = {
   search_page: 'reccomendations',
@@ -25,6 +26,7 @@ function App() {
       >
           <Main id={ID_VIEWS.search_page}/>  
           <Matches id={ID_VIEWS.matches}/>
+          <UserPage id={ID_VIEWS.profile}/>
         </Epic>         
     </AppRoot>
   );
