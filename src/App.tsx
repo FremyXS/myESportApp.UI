@@ -12,7 +12,7 @@ const ID_VIEWS = {
 };
 
 function App() {
-  const [activePage, setActivePage] = React.useState(ID_VIEWS.search_page);
+  const [activePage, setActivePage] = React.useState(ID_VIEWS.profile);
 
   const onChangeActivePage = (e) =>{
     setActivePage(e.currentTarget.dataset.story);
