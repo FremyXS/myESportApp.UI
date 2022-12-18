@@ -24,6 +24,7 @@ function App() {
       activeStory={activePage}
       tabbar={<Navigation onChangeActivePage={onChangeActivePage}/>}
       >
+          <UserPage id={ID_VIEWS.profile}/>
           <Main id={ID_VIEWS.search_page}/>  
           <Matches id={ID_VIEWS.matches}/>
           <UserPage id={ID_VIEWS.profile}/>

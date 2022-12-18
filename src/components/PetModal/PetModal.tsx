@@ -6,13 +6,13 @@ import {
     Input,
     IconButton,
     Slider,
-    PanelHeaderBack, PanelHeaderButton, Select, CustomSelectOptionInterface, Search, Group, Cell, Footer
+    PanelHeaderBack, PanelHeaderButton, Select, CustomSelectOptionInterface, Search, Group, Cell, Footer, Avatar
 } from "@vkontakte/vkui";
 import {ModalRoot} from "@vkontakte/vkui/dist/components/ModalRoot/ModalRootAdaptive";
 import * as React from "react";
 import {Icon16Clear, Icon28Done} from "@vkontakte/icons";
 import {useState} from "react";
-import {Sex, Pet} from "../../types"
+import {Sex, Pet, Genre} from "../../types"
 import ApiManager from "../../helpers/ApiManager"
 
 import {socket} from "../../socket"
@@ -22,10 +22,8 @@ const PetModal = ({close, addPet}) => {
     const [age, setAge] = useState(10)
     const [sex, setSex] = useState(0)
     const [genre, setGenre] = useState(undefined)
-
     const [search, setSearch] = React.useState("");
 
-    const [timeOut, setTimeouted] = useState(new Date())
 
     const onChange = async (e?) => {
         if (e){
@@ -73,8 +71,8 @@ const PetModal = ({close, addPet}) => {
                     petSex = Sex.female;
                     break;
             }
-            await addPet(new Pet(genre, name, age, petSex, genre))
-
+            console.log(genre)
+            await addPet(new Pet(0, name, age, petSex, genre))
         }
         if (close) {
             await close()
@@ -158,7 +156,14 @@ const PetModal = ({close, addPet}) => {
                                 filteredDogs
                                     ? filteredDogs.length > 0 && filteredDogs.map((thematic) => (
                                         <Cell key={thematic.id}
-                                              onClick={ (e) => setGenre(thematic.id)}>{thematic.name}</Cell>
+                                              onClick={ (e) => {
+                                                  setSearch(thematic.name)
+                                                  setGenre(thematic)
+                                              }
+                                        }
+                                            before={<Avatar size={28} src={thematic.image}/>}>
+                                            {thematic.name}
+                                        </Cell>
                                     ))
                                     : <Footer>Ничего не найдено</Footer>
                             }
