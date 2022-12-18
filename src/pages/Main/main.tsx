@@ -4,6 +4,7 @@ import { Avatar, Card, CardGrid, Div, Header, InfoRow, Panel, SimpleCell, SplitC
 import { UserType,  UserInfo} from '@Pages/Main/types';
 import bridge from '@vkontakte/vk-bridge';
 import { Icon12Cancel, Icon12Check, Icon20FunnelOutline, Icon24Dismiss } from '@vkontakte/icons';
+import PetsRowList from './components/PetsRowList/PetsRowList';
 // 186800902
 
 enum SexSwitch {
@@ -217,34 +218,7 @@ const Main = () => {
                               <Header mode="secondary">{searchUser.desk}</Header>
                           </Div>
                         </Group>
-                        <Group>
-                        <Header mode="secondary">Питомцы:</Header>
-                        <HorizontalScroll
-                        showArrows
-                        getScrollToLeft={(i) => i - 120}
-                        getScrollToRight={(i) => i + 120}>                            
-                        <div style={{display: 'flex'}}>
-                        {searchUser.pets.map((el, index) =>
-                            <HorizontalCell key={index} size='l'>
-                                <Div style={{display:'flex', width:'100%'}}>
-                                    <SimpleCell>
-                                        <Avatar size={40}></Avatar>
-                                    </SimpleCell>
-                                    <SimpleCell>
-                                        <InfoRow header="Имя">{el.name}</InfoRow>
-                                    </SimpleCell>   
-                                    <SimpleCell>
-                                        <InfoRow header="Парода">{el.gener}</InfoRow>
-                                    </SimpleCell>      
-                                    <SimpleCell>
-                                        <InfoRow header="Возраст">{el.age}</InfoRow> 
-                                    </SimpleCell>                                                                 
-                                </Div>
-                            </HorizontalCell>  
-                        )}   
-                        </div>       
-                        </HorizontalScroll>
-                        </Group>
+                        <PetsRowList pets={searchUser.pets}/>
                         <Group>
                         <Div>
                             <Header mode="secondary">О пользователе:</Header>
