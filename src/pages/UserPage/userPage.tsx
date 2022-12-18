@@ -129,10 +129,10 @@ const UserPage = () => {
                                             interests?(<InterestCard interestings={interests}/>):""
                                         }
                                         {
-                                            interests&&interests.length<6?(
+                                            interests?(
                                                 <CellButton before={<Icon28AddOutline />} style={{marginTop:"16px"}}
                                                             onClick={openInterestModal}>
-                                                    Добавить Интересы
+                                                     Изменить интересы
                                                 </CellButton>
                                             ):""
                                         }

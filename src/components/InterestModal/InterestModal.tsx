@@ -1,7 +1,7 @@
 import {useState} from "react";
 import MockManager from "@Helpers/MockManager";
 import * as React from "react";
-import {Pet, Sex} from "../../types";
+import {Interest, Pet, Sex} from "../../types";
 import {
     Card,
     CustomSelectOptionInterface, Div, FormItem, FormLayout, IconButton, Input,
@@ -43,7 +43,12 @@ const InterestModal = ({close, addInterest,userInterest}) => {
         }
         else{
             if(value.target.checked){
-                userInterest.push(interest)
+                if(userInterest.length < 6){
+                    userInterest.push(new Interest(interest.id,interest.title))
+                }
+                else{
+                    value.target.checked = false
+                }
             }
         }
     }
