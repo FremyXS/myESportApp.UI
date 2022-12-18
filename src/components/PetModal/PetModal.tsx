@@ -3,97 +3,121 @@ import {
     FormLayout,
     ModalPage,
     ModalPageHeader,
-    PanelHeaderClose,
     Input,
     IconButton,
     Slider,
-    PanelHeaderBack, PanelHeaderButton, Select, CustomSelectOptionInterface
+    PanelHeaderBack, PanelHeaderButton, Select, CustomSelectOptionInterface, Search, Group, Cell, Footer
 } from "@vkontakte/vkui";
-import { ModalRoot } from "@vkontakte/vkui/dist/components/ModalRoot/ModalRootAdaptive";
+import {ModalRoot} from "@vkontakte/vkui/dist/components/ModalRoot/ModalRootAdaptive";
 import * as React from "react";
 import {Icon16Clear, Icon28Done} from "@vkontakte/icons";
 import {useState} from "react";
-import {Sex , Pet} from "../../types"
-import MockManager from "../../helpers/MockManager";
+import {Sex, Pet} from "../../types"
 import ApiManager from "../../helpers/ApiManager"
-import {log} from "util";
+
+import {socket} from "../../socket"
 
 const PetModal = ({close, addPet}) => {
     const [isOpen, setIsOpen] = useState(true)
-    const [age,setAge] = useState(10)
-    const [sex,setSex] = useState(0)
-    const [genre,setGenre] = useState(undefined)
-    const [genres,setGenres] = useState([])
-    const getGenres = () => {
-        new MockManager().getAllGenre().then(value => {
-            setGenres(value)
-            if(value.length){
-                setGenre(value[0])
-            }
-        })
-    }
-    const closeModal = async () => {
-        if(close){
-            close()
-        }
+    const [age, setAge] = useState(10)
+    const [sex, setSex] = useState(0)
+    const [genre, setGenre] = useState(undefined)
 
-        setIsOpen(false)
-    }
-    React.useEffect(()=>{
-        getGenres()
-    },[])
-    const acceptModal = () => {
-        if(addPet){
-            const name = textInput.current.value
-            let petSex = Sex.secret
-            switch(sex){
-                case(0):
-                    petSex = Sex.secret;break;
-                case(1):
-                    petSex = Sex.male;break;
-                case(2):
-                    petSex = Sex.female;break;
+    const [search, setSearch] = React.useState("");
+
+    const [timeOut, setTimeouted] = useState(new Date())
+
+    const onChange = async (e?) => {
+        if (e)
+            setSearch(e.target.value)
+        const diff = new Date().getTime() - timeOut.getTime()
+        if (diff > 1200) {
+            console.log('do emit!')
+            if (search.length >= 3) {
+                socket.emit('breedSearch', search, (response) => {
+                    console.log(response)
+                    setFilteredDogs(response)
+                });
             }
-            addPet(new Pet(0,name,age,Sex.male,genre))
+            setTimeouted(new Date())
         }
-        if(close){
-            close()
+        else {
+            setTimeout(() => onChange, 300)
+        }
+    };
+
+    const [filteredDogs, setFilteredDogs] = useState(null)
+
+
+    const closeModal = async () => {
+        if (close) {
+            await close()
+        }
+            setIsOpen(false)
+    }
+    React.useEffect(() => {
+        const fetch = async () => {
+            const user = await ApiManager.getUserProfile()
+        }
+        fetch().then()
+    }, [])
+    const acceptModal = async () => {
+        if (addPet) {
+            const name = textInput.current.value
+            let petSex
+            switch (sex) {
+                case(0):
+                    petSex = Sex.secret;
+                    break;
+                case(1):
+                    petSex = Sex.male;
+                    break;
+                case(2):
+                    petSex = Sex.female;
+                    break;
+            }
+            await addPet(new Pet(genre, name, age, petSex, genre))
+
+        }
+        if (close) {
+            await close()
         }
         setIsOpen(false)
     }
     const clear = () => {
         textInput.current.value = ""
     }
-    const sexOptions = ():CustomSelectOptionInterface[] => {
+    const sexOptions = (): CustomSelectOptionInterface[] => {
         const option = [];
         let index = 0;
-        for(let key in Sex){
-            option.push({value:index,label:Sex[key]})
-            index ++;
+        for (let key in Sex) {
+            option.push({value: index, label: Sex[key]})
+            index++;
         }
         return option;
     }
-    const genreOptions = ():CustomSelectOptionInterface[] => {
-        const option = [];
-        for(let petGenre of genres){
-            option.push({value:petGenre.id,label:petGenre.name})
-        }
-        return option;
-    }
+    // const genreOptions = (): CustomSelectOptionInterface[] => {
+    //     const option = [];
+    //     for (let petGenre of genres) {
+    //         if (petGenre && petGenre.pet_id && petGenre.name)
+    //             option.push({value: petGenre.id, label: petGenre.name})
+    //     }
+    //     return option;
+    // }
     const textInput = React.createRef<HTMLInputElement>();
-    return(
+    return (
         <ModalRoot
             activeModal={isOpen ? "games" : null}
             onClose={closeModal}>
             <ModalPage id={"games"} header={
-                    <ModalPageHeader
-                        before={<PanelHeaderBack onClick={closeModal} />}
-                        after={<PanelHeaderButton>
-                            <Icon28Done onClick={acceptModal} />
-                        </PanelHeaderButton>
-                        }>
-                        Питомец
-                    </ModalPageHeader>}>
+                <ModalPageHeader
+                    before={<PanelHeaderBack onClick={closeModal}/>}
+                    after={<PanelHeaderButton>
+                        <Icon28Done onClick={acceptModal}/>
+                    </PanelHeaderButton>
+                    }>
+                    Питомец
+                </ModalPageHeader>}>
                 <FormLayout>
                     <FormItem top="Кличка">
                         <Input name="name" type="text" defaultValue="Шарик" getRef={textInput}
@@ -102,7 +126,7 @@ const PetModal = ({close, addPet}) => {
                                        hoverMode="opacity"
                                        aria-label="Очистить поле"
                                        onClick={clear}>
-                                       <Icon16Clear />
+                                       <Icon16Clear/>
                                    </IconButton>}/>
                     </FormItem>
                     <FormItem top="Возраст">
@@ -110,7 +134,9 @@ const PetModal = ({close, addPet}) => {
                             min={0}
                             max={25}
                             value={age}
-                            onChange={(value) => {setAge(Math.round(value))}}
+                            onChange={(value) => {
+                                setAge(Math.round(value))
+                            }}
                         />
                     </FormItem>
                     <FormItem>
@@ -128,12 +154,18 @@ const PetModal = ({close, addPet}) => {
                         </Select>
                     </FormItem>
                     <FormItem top="Порода">
-                        <Select onChange={(e) =>{
-                            setGenre(genres.filter(x=>x.id === e.target.value)[0])
-                        }}
-                                value={genre?genre.id:0}
-                                options={genreOptions()}>
-                        </Select>
+
+                        <Group>
+                            <Search value={search} onChange={onChange} after={null}/>
+                            {
+                                filteredDogs
+                                    ? filteredDogs.length > 0 && filteredDogs.map((thematic) => (
+                                        <Cell key={thematic.id}
+                                              onClick={ (e) => setGenre(thematic.id)}>{thematic.name}</Cell>
+                                    ))
+                                    : <Footer>Ничего не найдено</Footer>
+                            }
+                        </Group>
                     </FormItem>
                 </FormLayout>
             </ModalPage>
