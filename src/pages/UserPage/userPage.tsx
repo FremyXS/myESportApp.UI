@@ -33,11 +33,10 @@ const UserPage = () => {
     const [modal, setModal] = React.useState(null)
     const [user, setUser] = React.useState(undefined)
     const [pet, setPet] = React.useState(undefined)
-    const [interests, setInterests] = React.useState(undefined)
+    const [interests, setInterests] = React.useState([])
+    const [isRegister, setIsRegister] = React.useState(false)
 
     const [userProfile, setUserProfile] = React.useState(null)
-
-
 
     React.useEffect(() => {
         const getUser = async () => {
@@ -48,14 +47,16 @@ const UserPage = () => {
             })
                 .then(async (data) => {
                     if (data.id) {
-                        console.log(data)
                         const user = new User(Number(userId), data.photo_200, data.country.title,
                             data.first_name, data.last_name, data.city.title, data.sex)
                         setUser(user)
 
 
                         await ApiManager.getUserProfile()
-                            .then(e => setUserProfile(e.data))
+                            .then(e => {
+                                setUserProfile(e.data)
+                                setIsRegister(true)
+                            })
                             .catch(e => {
                                 if (e.message.code)
                                     console.log('not registered user!')
@@ -76,8 +77,6 @@ const UserPage = () => {
     React.useEffect(() => {
         const getPet = async () => {
             const pet = await ApiManager.myPet().then(r => r.data.data).then(() => openPetModal())
-            console.log(pet)
-            console.log(pet)
             setPet(pet)
         }
         getPet().then()
@@ -147,13 +146,13 @@ const UserPage = () => {
                                 <Group>
                                     <Div style={{padding: 40}}>
                                         <Div style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Avatar key={100} size={100} src={user ? user.photo : '#'}>
-                                            </Avatar>
-                                        </Div>
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
+                                        <Avatar key={100} size={100} src={user ? user.photo : '#'}>
+                                        </Avatar>
+                                    </Div>
                                         <Card mode="shadow">
                                             <Div>
                                                 <Title style={{textAlign: "center"}}>
@@ -164,29 +163,36 @@ const UserPage = () => {
                                                 </Caption>
                                             </Div>
                                         </Card>
-                                        <Card mode="shadow" style={{marginTop: "40px", padding: "8px"}}>
+                                        {
+                                            isRegister?(
+                                                <Card mode="shadow" style={{marginTop: "40px", padding: "8px"}}>
+                                                    {
+                                                        interests ? (<InterestCard interestings={interests}/>) : ""
+                                                    }
+                                                    {
+                                                        interests && interests.length < 6 ? (
+                                                            <CellButton before={<Icon28AddOutline/>}
+                                                                        style={interests.length?{marginTop: "16px"}:{}}
+                                                                        onClick={openInterestModal}>
+                                                                Изменить Интересы
+                                                            </CellButton>
+                                                        ) : ""
+                                                    }
+                                                </Card>
+                                            ):""
+                                        }
+
+                                        <Card mode="shadow" style={{marginTop:"40px", padding: "8px"}}>
                                             {
-                                                interests ? (<InterestCard interestings={interests}/>) : ""
-                                            }
-                                            {
-                                                interests && interests.length < 6 ? (
-                                                    <CellButton before={<Icon28AddOutline/>}
-                                                                style={{marginTop: "16px"}}
-                                                                onClick={openInterestModal}>
-                                                        Добавить Интересы
+                                                pet ? (<PetCard pet={pet}/>) : (
+                                                    <CellButton before={<Icon28AddOutline/>} style={{marginTop: "16px"}}
+                                                                onClick={openPetModal}>
+                                                        Изменить питомца
                                                     </CellButton>
-                                                ) : ""
+                                                )
                                             }
                                         </Card>
 
-                                        {
-                                            pet ? (<PetCard pet={pet}/>) : (
-                                                <CellButton before={<Icon28AddOutline/>} style={{marginTop: "16px"}}
-                                                            onClick={openPetModal}>
-                                                    Добавить питомца
-                                                </CellButton>
-                                            )
-                                        }
                                     </Div>
                                 </Group>
                             ) : (

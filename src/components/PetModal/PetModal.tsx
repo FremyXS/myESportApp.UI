@@ -28,18 +28,15 @@ const PetModal = ({close, addPet}) => {
     const [timeOut, setTimeouted] = useState(new Date())
 
     const onChange = async (e?) => {
-        if (e)
+        if (e){
             setSearch(e.target.value)
-        const diff = new Date().getTime() - timeOut.getTime()
-        if (diff > 1200) {
-            console.log('do emit!')
-            if (search.length >= 3) {
-                socket.emit('breedSearch', search, (response) => {
-                    console.log(response)
-                    setFilteredDogs(response)
-                });
-            }
-            setTimeouted(new Date())
+        }
+        console.log('do emit!')
+        if (search.length >= 3) {
+            socket.emit('breedSearch', search, (response) => {
+                console.log(response)
+                setFilteredDogs(response)
+            });
         }
         else {
             setTimeout(() => onChange, 300)
