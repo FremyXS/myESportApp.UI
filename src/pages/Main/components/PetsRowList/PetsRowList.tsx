@@ -11,13 +11,13 @@ function PetsRowList({pets}:{pets: PetType}){
                 <InfoRow>{pets.pet_sex === 'ma'}</InfoRow>
             </SimpleCell> */}
             <SimpleCell>
-                <Avatar size={60} src={pets.pet.image}></Avatar>
+                <Avatar size={60} src={pets.pet?pets.pet.image:""}></Avatar>
             </SimpleCell>
             <SimpleCell>
                 <InfoRow header="Имя">{pets.pet_name}</InfoRow>
             </SimpleCell>
             <SimpleCell>
-                <InfoRow header="Парода">{pets.pet.name}</InfoRow>
+                <InfoRow header="Парода">{pets.pet?pets.pet.name:"Парода"}</InfoRow>
             </SimpleCell>
             <SimpleCell>
                 <InfoRow header="Возраст">{pets.pet_age}</InfoRow>
