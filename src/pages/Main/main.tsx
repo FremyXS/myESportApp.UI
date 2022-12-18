@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, Group, HorizontalCell, HorizontalScroll, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, PanelHeaderContent, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
+import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, Group, HorizontalCell, HorizontalScroll, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, PanelHeaderContent, Placeholder, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
 import { Avatar, Card, CardGrid, Div, Header, InfoRow, Panel, SimpleCell, SplitCol, SplitLayout, Title, View } from '@vkontakte/vkui';
 import { UserType,  UserInfo} from '@Pages/Main/types';
 import bridge from '@vkontakte/vk-bridge';
-import { Icon12Cancel, Icon12Check, Icon20FunnelOutline, Icon24Dismiss } from '@vkontakte/icons';
+import { Icon12Cancel, Icon12Check, Icon20FunnelOutline, Icon24Dismiss, Icon56ReportOutline } from '@vkontakte/icons';
 import PetsRowList from './components/PetsRowList/PetsRowList';
 // 186800902
 import { Paragraph } from '@vkontakte/vkui';
@@ -50,6 +50,7 @@ const Main = () => {
         photo_max_orig: '',
     });
 
+    const [isActive, setIsActive] = React.useState(true);
     React.useEffect(() => {
         getUsersListAsync();
     }, [])
@@ -62,7 +63,8 @@ const Main = () => {
     
 
     function onAppenedClick(){
-      if(selectUserId + 1 >= listUsers.length){
+      if(selectUserId + 1 >= listUsers.length){        
+        setIsActive(false);
         return;
       }
       getUserAsycn(selectUserId + 1, listUsers)
@@ -71,6 +73,7 @@ const Main = () => {
 
     function onCancelClick(){
       if(selectUserId + 1 >= listUsers.length){
+        setIsActive(false);
         return;
       }
       getUserAsycn(selectUserId + 1, listUsers)
@@ -190,64 +193,71 @@ const Main = () => {
                   </IconButton>
                   </Div>
                 </PanelHeader>
+                {isActive? 
                 <CardGrid size={'l'}>
-                  <Card mode="shadow">
-                        <Group>
-                          
-                          <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center', width: '100%'}}>
-                              <Avatar size={225} src={userInfo.photo_max_orig}>                            
-                              </Avatar>
-                          </Div>
-                          <Div>
-                              <Title>
-                                  {userInfo.first_name} {userInfo.last_name}
-                              </Title>
-                          </Div>
-                          <Div>
-                              <Paragraph style={{wordBreak: 'break-all', color: '#979797'}}>
-                                {selectUser.description}
-                              </Paragraph>
-                          </Div>
-                        </Group>
-                         <PetsRowList pets={selectUser.my_pet}/>
-                        <Group>
-                          <Div>
-                              <Header mode="secondary">О пользователе:</Header>
-                              <SimpleCell multiline>
-                                      <InfoRow header="Город">{selectUser.city}</InfoRow>
-                              </SimpleCell>
-                              <SimpleCell multiline>
-                                      <InfoRow header="Пол">{selectUser.my_sex}</InfoRow>
-                              </SimpleCell>
-                          </Div>                          
-                        {/* <FormItem top="Интересы" style={{width:'100%'}}>
-                            <ChipsInput
-                            readOnly
-                            value={selectUser.interests}
-                            renderChip={({ id, label, ...rest }) => (
-                                <Chip
-                                  value={id}
-                                  removable={false}
-                                  {...rest}
-                                >
-                                  {label}
-                                </Chip>
-                              )}
-                            />
-                        </FormItem>        */}
-                        </Group>                       
-                    </Card>
-                    <Div style={{width: '100%'}}>
-                        <ButtonGroup mode="horizontal" gap="m" stretched>
-                            <Button size='l' appearance="negative" stretched onClick={() => onAppenedClick()}>
-                                <Icon12Cancel></Icon12Cancel>
-                            </Button>    
-                            <Button size='l' appearance="positive" stretched onClick={() => onCancelClick()}>
-                                <Icon12Check></Icon12Check>
-                            </Button>                        
-                        </ButtonGroup>
-                      </Div>
-                </CardGrid>
+                <Card mode="shadow">
+                      <Group>
+                        
+                        <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center', width: '100%'}}>
+                            <Avatar size={225} src={userInfo.photo_max_orig}>                            
+                            </Avatar>
+                        </Div>
+                        <Div>
+                            <Title>
+                                {userInfo.first_name} {userInfo.last_name}
+                            </Title>
+                        </Div>
+                        <Div>
+                            <Paragraph style={{wordBreak: 'break-all', color: '#979797'}}>
+                              {selectUser.description}
+                            </Paragraph>
+                        </Div>
+                      </Group>
+                       <PetsRowList pets={selectUser.my_pet}/>
+                      <Group>
+                        <Div>
+                            <Header mode="secondary">О пользователе:</Header>
+                            <SimpleCell multiline>
+                                    <InfoRow header="Город">{selectUser.city}</InfoRow>
+                            </SimpleCell>
+                            <SimpleCell multiline>
+                                    <InfoRow header="Пол">{selectUser.my_sex}</InfoRow>
+                            </SimpleCell>
+                        </Div>                          
+                      {/* <FormItem top="Интересы" style={{width:'100%'}}>
+                          <ChipsInput
+                          readOnly
+                          value={selectUser.interests}
+                          renderChip={({ id, label, ...rest }) => (
+                              <Chip
+                                value={id}
+                                removable={false}
+                                {...rest}
+                              >
+                                {label}
+                              </Chip>
+                            )}
+                          />
+                      </FormItem>        */}
+                      </Group>                       
+                  </Card>
+                  <Div style={{width: '100%'}}>
+                      <ButtonGroup mode="horizontal" gap="m" stretched>
+                          <Button size='l' appearance="negative" stretched onClick={() => onAppenedClick()}>
+                              <Icon12Cancel></Icon12Cancel>
+                          </Button>    
+                          <Button size='l' appearance="positive" stretched onClick={() => onCancelClick()}>
+                              <Icon12Check></Icon12Check>
+                          </Button>                        
+                      </ButtonGroup>
+                    </Div>
+              </CardGrid>
+              :
+              <Placeholder icon={<Icon56ReportOutline/>}>
+                Упс, кикого не удалось найти. Пожалуйста измините фильтр поиска или зайдите чуть позже
+              </Placeholder>
+              }
+                
             </Panel>
           </View> 
         </SplitCol>
