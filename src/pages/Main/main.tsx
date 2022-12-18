@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, HorizontalCell, HorizontalScroll, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
+import { Button, ButtonGroup, Checkbox, Chip, ChipsInput, FormItem, FormLayout, Group, HorizontalCell, HorizontalScroll, IconButton, ModalPage, ModalPageHeader, ModalRoot, PanelHeader, PanelHeaderButton, PanelHeaderClose, RangeSlider, SubnavigationButton } from '@vkontakte/vkui';
 import { Avatar, Card, CardGrid, Div, Header, InfoRow, Panel, SimpleCell, SplitCol, SplitLayout, Title, View } from '@vkontakte/vkui';
 import { UserType,  UserInfo} from '@Pages/Main/types';
 import bridge from '@vkontakte/vk-bridge';
@@ -193,32 +193,59 @@ const Main = () => {
             <View activePanel='panel1'>
             <Panel id="panel1">
                 <PanelHeader>
-                    <Div style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Div style={{display: 'flex', height: '100%', alignItems: 'center'}}>
                         Поиск
-                        <SubnavigationButton
-                        before={<Icon20FunnelOutline />}
-                        onClick={openModal}
-                        expandable />
-                    </Div>
+                        <IconButton style={{float: 'right'}}                        
+                          onClick={openModal}>
+                          <Icon20FunnelOutline/>
+                        </IconButton>
+                        </Div>
                 </PanelHeader>
                 <CardGrid size={'l'}>
-                        <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center', width: '100%'}}>
-                            <Avatar size={225} src={userInfo.photo_max_orig}>                            
-                            </Avatar>
-                        </Div>
-                    <Card mode="shadow">
-                        <Div>
-                            <Title>
-                                {userInfo.first_name} {userInfo.last_name}
-                            </Title>
-                        </Div>
-                    </Card>
-                    <Card mode="shadow">
-                        <Div>
-                            <Header mode="secondary">{searchUser.desk}</Header>
-                        </Div>
-                    </Card>
-                    <Card mode="shadow">
+                  <Card mode="shadow">
+                        <Group>
+                          <Div style={{display: 'flex', justifyContent:'center', alignItems: 'center', width: '100%'}}>
+                              <Avatar size={225} src={userInfo.photo_max_orig}>                            
+                              </Avatar>
+                          </Div>
+                          <Div>
+                              <Title>
+                                  {userInfo.first_name} {userInfo.last_name}
+                              </Title>
+                          </Div>
+                          <Div>
+                              <Header mode="secondary">{searchUser.desk}</Header>
+                          </Div>
+                        </Group>
+                        <Group>
+                        <Header mode="secondary">Питомцы:</Header>
+                        <HorizontalScroll
+                        showArrows
+                        getScrollToLeft={(i) => i - 120}
+                        getScrollToRight={(i) => i + 120}>                            
+                        <div style={{display: 'flex'}}>
+                        {searchUser.pets.map((el, index) =>
+                            <HorizontalCell key={index} size='l'>
+                                <Div style={{display:'flex', width:'100%'}}>
+                                    <SimpleCell>
+                                        <Avatar size={40}></Avatar>
+                                    </SimpleCell>
+                                    <SimpleCell>
+                                        <InfoRow header="Имя">{el.name}</InfoRow>
+                                    </SimpleCell>   
+                                    <SimpleCell>
+                                        <InfoRow header="Парода">{el.gener}</InfoRow>
+                                    </SimpleCell>      
+                                    <SimpleCell>
+                                        <InfoRow header="Возраст">{el.age}</InfoRow> 
+                                    </SimpleCell>                                                                 
+                                </Div>
+                            </HorizontalCell>  
+                        )}   
+                        </div>       
+                        </HorizontalScroll>
+                        </Group>
+                        <Group>
                         <Div>
                             <Header mode="secondary">О пользователе:</Header>
                             <SimpleCell multiline>
@@ -227,51 +254,24 @@ const Main = () => {
                             <SimpleCell multiline>
                                     <InfoRow header="Пол">{SexSwitch[userInfo.sex]}</InfoRow>
                             </SimpleCell>
-                        </Div>
+                        </Div>                          
+                        <FormItem top="Интересы" style={{width:'100%'}}>
+                            <ChipsInput
+                            readOnly
+                            value={searchUser.interests}
+                            renderChip={({ id, label, ...rest }) => (
+                                <Chip
+                                  value={id}
+                                  removable={false}
+                                  {...rest}
+                                >
+                                  {label}
+                                </Chip>
+                              )}
+                            />
+                        </FormItem>       
+                        </Group>                 
                     </Card>
-                    <Card mode="shadow">
-                        <Header mode="secondary">Питомцы:</Header>
-                            <HorizontalScroll
-                            showArrows
-                            getScrollToLeft={(i) => i - 120}
-                            getScrollToRight={(i) => i + 120}>                            
-                            <div style={{display: 'flex'}}>
-                            {searchUser.pets.map((el, index) =>
-                                <HorizontalCell key={index} size='l'>
-                                    <Div style={{display:'flex', width:'100%'}}>
-                                        <SimpleCell>
-                                            <Avatar size={40}></Avatar>
-                                        </SimpleCell>
-                                        <SimpleCell>
-                                            <InfoRow header="Имя">{el.name}</InfoRow>
-                                        </SimpleCell>   
-                                        <SimpleCell>
-                                            <InfoRow header="Парода">{el.gener}</InfoRow>
-                                        </SimpleCell>      
-                                        <SimpleCell>
-                                            <InfoRow header="Возраст">{el.age}</InfoRow> 
-                                        </SimpleCell>                                                                 
-                                    </Div>
-                                </HorizontalCell>  
-                            )}   
-                            </div>       
-                            </HorizontalScroll>
-                    </Card>
-                    <FormItem top="Интересы" style={{width:'100%'}}>
-                        <ChipsInput
-                        readOnly
-                        value={searchUser.interests}
-                        renderChip={({ id, label, ...rest }) => (
-                            <Chip
-                              value={id}
-                              removable={false}
-                              {...rest}
-                            >
-                              {label}
-                            </Chip>
-                          )}
-                        />
-                    </FormItem>
                     <Div style={{width: '100%'}}>
                     <ButtonGroup mode="horizontal" gap="m" stretched>
                             <Button size='l' appearance="negative" stretched onClick={() => onAppenedClick()}>
@@ -282,6 +282,7 @@ const Main = () => {
                             </Button>                        
                         </ButtonGroup>
                     </Div>
+
                 </CardGrid>
             </Panel>
         </View> 
