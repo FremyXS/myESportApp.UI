@@ -219,7 +219,7 @@ const Main = () => {
                             </Paragraph>
                         </Div>
                       </Group>
-                       <PetsRowList pets={selectUser.my_pet}/>
+                       
                       <Group>
                         <Div>
                             <Header mode="secondary">О пользователе:</Header>
@@ -245,7 +245,8 @@ const Main = () => {
                             )}
                           />
                       </FormItem>        */}
-                      </Group>                       
+                      </Group>                     
+                      <PetsRowList pets={selectUser.my_pet}/>  
                   </Card>
                   <Div style={{width: '100%'}}>
                       <ButtonGroup mode="horizontal" gap="m" stretched>

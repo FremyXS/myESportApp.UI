@@ -6,8 +6,7 @@ function PetsRowList({pets}:{pets: PetType}){
     return (
         <Group>
         <Header mode="secondary">Питомец:</Header>
-        <Div style={{ display: 'flex', width: '100%' }}>
-            {/* <SimpleCell>
+        {/* <SimpleCell>
                 <InfoRow>{pets.pet_sex === 'ma'}</InfoRow>
             </SimpleCell> */}
             <SimpleCell>
@@ -22,7 +21,6 @@ function PetsRowList({pets}:{pets: PetType}){
             <SimpleCell>
                 <InfoRow header="Возраст">{pets.pet_age}</InfoRow>
             </SimpleCell>
-            </Div>
         </Group>
     )
 }
