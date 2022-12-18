@@ -22,7 +22,7 @@ import {
     Icon28AddOutline
 } from "@vkontakte/icons";
 import bridge from "@vkontakte/vk-bridge";
-import { User, Pet } from "../../types";
+import {User, Pet, Interest} from "../../types";
 import DataManager from "@Helpers/DataManager";
 import MockManager from "@Helpers/MockManager";
 import Loader from "@Components/Loader/laoder";
@@ -84,11 +84,14 @@ const UserPage = () => {
     const addPet = (pet: Pet) => {
         setPet(pet)
     }
+    const addInterest = (interests: Interest) => {
+        setInterests(interests)
+    }
     const openPetModal = () => {
         setModal((<PetModal close={()=>{setModal(null)}} addPet={addPet}/>))
     }
     const openInterestModal = () => {
-        setModal((<InterestModal close ={()=>{setModal(null)}}addInterest={()=>{}}/>))
+        setModal((<InterestModal userInterest={interests} close ={()=>{setModal(null)}} addInterest={addInterest}/>))
     }
     return (
         <SplitLayout modal={modal??''}>

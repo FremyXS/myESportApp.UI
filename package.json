@@ -13,7 +13,7 @@
     "@vkontakte/icons": "2.1.1",
     "@vkontakte/vk-bridge": "2.7.2",
     "@vkontakte/vkui": "4.40.0",
-    "axios": "^1.2.1",
+    "axios": "1.2.1",
     "cross-env": "7.0.3",
     "mini-css-extract-plugin": "2.7.2",
     "react": "18.2.0",

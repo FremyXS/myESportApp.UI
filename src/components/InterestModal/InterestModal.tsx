@@ -17,9 +17,8 @@ import DataManager from "@Helpers/DataManager";
 import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
 import ApiManager from "@Helpers/ApiManager";
 
-const InterestModal = ({close, addInterest}) => {
+const InterestModal = ({close, addInterest,userInterest}) => {
     const [isOpen, setIsOpen] = React.useState(true)
-    const manager: DataManager = new MockManager();
     const [interests, setInterest] = useState([]);
     const closeModal = async () => {
         if (close) {
@@ -29,22 +28,32 @@ const InterestModal = ({close, addInterest}) => {
     }
     const acceptModal = () => {
         if (addInterest) {
-
+            addInterest(userInterest)
         }
         if (close) {
             close()
         }
         setIsOpen(false)
     }
+    const changeCheckBox = (value,interest) => {
+        if(userInterest.map(x=>x.id).includes(interest.id)){
+            if(!value.target.checked){
+                userInterest = userInterest.filter(x=>x.id != interest.id)
+            }
+        }
+        else{
+            if(value.target.checked){
+                userInterest.push(interest)
+            }
+        }
+    }
     React.useEffect(() => {
         const fetch = async () => {
-            const inte = await ApiManager.getAllInterests()
-            console.log(inte.data.data)
-            setInterest(inte.data.data)
+            const inter = await ApiManager.getAllInterests()
+            setInterest(inter.data.data)
         }
         fetch().then()
     }, [])
-    console.log(interests)
     return (
         <ModalRoot
             activeModal={isOpen ? "interest" : null}
@@ -61,10 +70,11 @@ const InterestModal = ({close, addInterest}) => {
 
                 <FormItem top={'Выбери свои увлечения'}>
                     {
-                        interests.map(e => (<Checkbox key={e.id}>{e.title}</Checkbox>))
+                        interests.map(e => (<Checkbox key={e.id} defaultChecked={userInterest.map(x=>x.id).includes(e.id)}
+                        onClick={(event) => changeCheckBox(event,e)}>
+                            {e.title}</Checkbox>))
                     }
                 </FormItem>
-
 
             </ModalPage>
         </ModalRoot>
